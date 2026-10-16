@@ -4,7 +4,7 @@ import {metroBaseline} from './growth_logic.js';
 const $=id=>document.getElementById(id),el=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;return e;};
 const fmt=(v,d=0)=>Number.isFinite(v)?v.toLocaleString('zh-TW',{maximumFractionDigits:d}):'—',pct=v=>Number.isFinite(v)?fmt(v*100,1)+'%':'—';
 const date=v=>v?new Date(v).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false}):'未知';
-let snapshot=null,manifest=null,replayIndex=null;
+let snapshot=null,manifest=null,replayIndex=null,loading=false;
 async function read(url){const r=await fetch(url,{cache:'no-cache',signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error(`資料讀取失敗（${r.status}）`);return r.json();}
 async function readVerified(entry){if(!/^\d{4}-\d{2}-\d{2}\.json$/.test(entry.file))throw Error('週檔名不符');const r=await fetch('./data/weeks/'+entry.file,{cache:'no-cache',signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('週資料讀取失敗');const raw=await r.arrayBuffer(),hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',raw))].map(v=>v.toString(16).padStart(2,'0')).join('');if(raw.byteLength!==entry.bytes||hash!==entry.sha256)throw Error('週資料版本不一致');return JSON.parse(new TextDecoder().decode(raw));}
 function renderHealth(){
@@ -33,7 +33,8 @@ function renderExperiment(){
  const middle=rows[3][1];$('outcome-takeaway').textContent=`50% 主通道轉乘的示例：道路總排隊${change(middle)}，班表需 ${middle.requiredFleet} 輛出勤、含備車 ${middle.procurementFleet} 輛。請對照 30% 與 70%：專用道需要足夠轉乘才能抵消一般車道減少；這不是內湖效果保證或採購數量。`;
 }
 $('report-year').onchange=renderExperiment;renderExperiment();
-(async()=>{
+async function loadReport(){
+ if(loading)return;loading=true;$('reload-report').disabled=true;
  const outcomes=await Promise.allSettled([
   (async()=>{snapshot=await read('./data/dashboard.json');if(snapshot.schema_version!==1||!Array.isArray(snapshot.frames))throw Error('快照格式不符');renderHealth();})(),
   (async()=>{manifest=await read('./data/weeks/index.json');if(!Array.isArray(manifest.weeks)||!manifest.matched_weekdays?.am)throw Error('週摘要格式不符');historyHealth();const am=manifest.matched_weekdays.am,pm=manifest.matched_weekdays.pm;
@@ -44,9 +45,12 @@ $('report-year').onchange=renderExperiment;renderExperiment();
   (async()=>{const m=await read('./data/metro.json'),mean=metroBaseline(m);$('metro-evidence').textContent=`${m.dates[0]}–${m.dates.at(-1)}，${m.weekdays} 個週一至週五，07–10 時進站且目的地為西湖／港墘的旅次，平均 ${fmt(mean)} 人次／日；未排國定假日。`;})(),
   (async()=>{replayIndex=await read('./data/history/index.json');historyHealth();})()
  ]);
- if(outcomes[0].status==='rejected'){snapshot=null;$('morning-coverage').textContent='未知';$('latest-time').textContent='讀取失敗';$('availability-reason').textContent='快照讀取失敗，無法核對今日資料；不以零車流替代。';$('schedule-health').textContent='排程紀錄未取得。';}
+ if(outcomes[0].status==='rejected'){snapshot=null;$('morning-coverage').textContent='未知';$('latest-time').textContent='讀取失敗';$('live-age').textContent='本次未取得來源時間，請重新讀取';$('morning-date').textContent='';$('publication-meta').textContent='本次未取得發布資訊';$('availability-reason').textContent='快照讀取失敗，無法核對今日資料；不以零車流替代。';$('schedule-health').textContent='排程紀錄未取得。';}
  if(outcomes[1].status==='rejected'){$('weekly-evidence').textContent=outcomes[1].reason.message+'，週比較暫不可用。';$('hotspot-list').replaceChildren(el('p','候選資料未取得，不能判定無瓶頸。'));}
  if(outcomes[2].status==='rejected')$('metro-evidence').textContent='捷運 OD 讀取失敗，平均人次未知。';
  if(outcomes[3].status==='rejected')$('history-updated').textContent+=' 地圖歷史索引讀取失敗。';
-})();
+ loading=false;$('reload-report').disabled=false;
+}
+$('reload-report').onclick=loadReport;loadReport();
 setInterval(renderHealth,60000);
+setInterval(()=>{if(!document.hidden)loadReport();},300000);

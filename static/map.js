@@ -13,7 +13,7 @@ const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoo
 tiles.on('tileerror',()=>{$('tile-warning').hidden=false;});
 const heatLayer=L.layerGroup().addTo(map),roadLayer=L.layerGroup(),busLayer=L.layerGroup(),metroLayer=L.layerGroup().addTo(map);
 let data,metro,index=0,selectedId,markers=new Map(),mode='latest',playTimer=null;
-let historyIndex={days:[]},historyReady=false,selectionRequest=0;
+let historyIndex={days:[]},selectionRequest=0;
 const archives=new Map(),archiveRequests=new Map();
 let recentFrames=[];
 const latestIndex=()=>data.frames.findIndex(f=>(f.road.timestamp||f.captured_at)===(data.current.road.timestamp||data.current.captured_at));
@@ -64,14 +64,15 @@ function rebuildFrames(){
  index=mode==='latest'?latestIndex():selected?data.frames.indexOf(selected):-1;
 }
 async function readHistoryIndex(){
- const res=await fetch('./data/history/index.json');if(!res.ok)throw Error('歷史索引讀取失敗（HTTP '+res.status+'）');
+ const res=await fetch('./data/history/index.json',{cache:'no-cache'});if(!res.ok)throw Error('歷史索引讀取失敗（HTTP '+res.status+'）');
  const manifest=await res.json();if(manifest.schema_version!==1||!Array.isArray(manifest.days))throw Error('歷史索引格式不符');
- historyIndex=manifest;historyReady=true;
- const select=$('archive-day');select.replaceChildren(node('option','選擇已存入 GitHub 的日期'));select.firstChild.value='';
+ historyIndex=manifest;
+ const select=$('archive-day'),previous=select.value;select.replaceChildren(node('option','選擇已存入 GitHub 的日期'));select.firstChild.value='';
  for(const entry of [...manifest.days].reverse()){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(entry.day)||entry.file!==entry.day+'.json')throw Error('歷史檔名稱不符');
   const option=node('option',`${entry.day} · ${entry.frames} 筆快照 · ${(entry.bytes/1000000).toFixed(2)} MB`);option.value=entry.day;select.append(option);
  }
+ if(manifest.days.some(e=>e.day===previous))select.value=previous;
  $('archive-status').textContent=manifest.days.length?`${manifest.days.length} 天歷史已存入 GitHub；選日期才下載當日檔案。`:'尚無已提交的歷史檔案。';
 }
 async function ensureDay(day){
@@ -97,7 +98,7 @@ async function load(){
   if(mode==='latest'){index=latestIndex();$('observation-date').value=taipeiParts(data.current.road.timestamp||data.current.captured_at).day;$('period').value='all';}
   else{const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames.at(-1)):-1;}
   render();renderBus();
-  try{if(!historyReady)await readHistoryIndex();await ensureDay(previousDay(today()));if(mode==='period')await ensureDay($('observation-date').value);if(mode==='period'&&index<0){const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames[0]):-1;}render();}
+  try{await readHistoryIndex();await ensureDay(previousDay(today()));if(mode==='period')await ensureDay($('observation-date').value);if(mode==='period'&&index<0){const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames[0]):-1;}render();}
   catch(e){$('archive-status').textContent=e.message+'；未取得歷史資料，請重試。';}
  }catch(e){$('error').hidden=false;$('error').textContent=e.message+'；請稍後重新讀取。';$('freshness').textContent='讀取失敗';}
  finally{button.disabled=false;}

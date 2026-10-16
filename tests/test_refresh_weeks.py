@@ -67,7 +67,16 @@ class ReplayPublicationTests(unittest.TestCase):
             for entry in manifest['days']:
                 encoded=(output/entry['file']).read_bytes()
                 self.assertEqual(entry['sha256'],hashlib.sha256(encoded).hexdigest())
+            original=(output/'2026-10-15.json').read_bytes()
+            fresh=json.loads((raw/'2026-10-15.json').read_bytes());fresh['sources']={'new_download':{'sha256':'different compression'}}
+            (raw/'2026-10-15.json').write_text(json.dumps(fresh))
             publish_replay(date(2026,10,16),raw,output)
+            self.assertEqual((output/'2026-10-15.json').read_bytes(),original)
+            fresh['frames'][0][1][0][1]=99
+            (raw/'2026-10-15.json').write_text(json.dumps(fresh))
+            with self.assertRaisesRegex(ValueError,'observations differ'):
+                publish_replay(date(2026,10,16),raw,output)
+            self.assertEqual((output/'2026-10-15.json').read_bytes(),original)
             before=(output/'index.json').read_bytes();(raw/'2026-10-15.json').unlink()
             with self.assertRaises(FileNotFoundError):publish_replay(date(2026,10,16),raw,output)
             self.assertEqual((output/'index.json').read_bytes(),before)

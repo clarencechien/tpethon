@@ -81,8 +81,15 @@ def publish_replay(as_of, archives, output):
         if payload.get('day') != str(day) or not payload.get('frames') or not payload.get('sources'):
             raise ValueError('Invalid replay archive: ' + str(day))
         previous = output / f'{day}.json'
-        if previous.exists() and json.loads(previous.read_bytes()) != payload:
-            raise ValueError('Existing immutable replay day differs: ' + str(day))
+        if previous.exists():
+            published = json.loads(previous.read_bytes())
+            # A new download may change response compression or provenance hashes.
+            # Retain the originally published evidence if all observations are identical.
+            fields = ('schema_version', 'day', 'timezone', 'sampling', 'columns', 'sensors', 'frames')
+            changed = [key for key in fields if published.get(key) != payload.get(key)]
+            if changed:
+                raise ValueError('Published replay observations differ for ' + str(day) + ': ' + ', '.join(changed))
+            payload = published
         payloads.append(payload)
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=output.parent) as directory:
@@ -123,4 +130,12 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as exc:
+        # Useful Actions annotations without printing credentials or response bodies.
+        detail = str(exc) if isinstance(exc, (ValueError, FileNotFoundError)) else type(exc).__name__
+        detail = detail.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+        print('::error::Rolling traffic refresh stopped: ' + detail, file=sys.stderr)
+        raise SystemExit(1)
+

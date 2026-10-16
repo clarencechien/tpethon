@@ -1,5 +1,7 @@
 """Exercise actual committed history, failed downloads, and rapid date changes."""
 from playwright.sync_api import sync_playwright
+import json
+from pathlib import Path
 
 with sync_playwright() as p:
     browser=p.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox'])
@@ -40,5 +42,19 @@ with sync_playwright() as p:
     bad.wait_for_function("document.querySelector('#archive-status').textContent.includes('503')")
     assert bad.locator('#stat-hot').inner_text()=='—'
     assert bad.locator('#snapshot-select').is_disabled()
+    # A tab open before a backfill must discover the new date on refresh.
+    changing=browser.new_page();index_calls=[]
+    real_index=json.loads(Path('data/history/index.json').read_text())
+    def index_response(route):
+        index_calls.append(1)
+        body={'schema_version':1,'days':[]} if len(index_calls)==1 else real_index
+        route.fulfill(status=200,content_type='application/json',body=json.dumps(body))
+    changing.route('**/data/history/index.json',index_response)
+    changing.goto('http://127.0.0.1:8001/map.html')
+    changing.wait_for_function("!document.querySelector('#refresh').disabled")
+    assert changing.locator('#archive-day option').count()==1
+    changing.locator('#refresh').click()
+    changing.wait_for_function("document.querySelector('#archive-day').options.length>1")
+    assert len(index_calls)>=2
     print('PASS: real GitHub day loads, AM/PM coverage, replay, downloads, absent dates, latest restored, mobile, failed archive visible.')
     browser.close()

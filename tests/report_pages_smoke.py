@@ -19,6 +19,9 @@ with sync_playwright() as p:
  assert '32 輛出勤' in page.locator('#outcome-takeaway').inner_text()
  page.locator('#report-year').select_option('4')
  assert '10,824' in page.locator('#growth-note').inner_text()
+ page.locator('#reload-report').click()
+ page.wait_for_function("!document.querySelector('#reload-report').disabled")
+ assert page.locator('#report-year').input_value()=='4'
  page.screenshot(path='/tmp/neihu-report-desktop.png',full_page=True)
  page.set_viewport_size({'width':390,'height':844})
  assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
