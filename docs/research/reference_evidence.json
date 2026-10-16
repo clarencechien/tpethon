@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/main/docs/web/docs/SUMO_at_a_Glance.md",
+    "accessed": "2026-10-16",
+    "sha256": "01be7e024ada95393a90ba5983a1e6a29720fac98208449075e1dc34f64930a7",
+    "verification": "official documentation / author repository; not an independent field validation"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/main/docs/web/docs/Simulation/Calibrator.md",
+    "accessed": "2026-10-16",
+    "sha256": "ea709a4b061f7877e883100c2321acae517ef4cfd58cf500c3a066bf5cd4d580",
+    "verification": "official documentation / author repository; not an independent field validation"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/main/docs/web/docs/Simulation/Traffic_Lights.md",
+    "accessed": "2026-10-16",
+    "sha256": "ef2b7476bc450a8d464196b98a94503419c009df31d94801e3829d1dfd30016e",
+    "verification": "official documentation / author repository; not an independent field validation"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/main/docs/web/docs/Simulation/Taxi.md",
+    "accessed": "2026-10-16",
+    "sha256": "c10ecdbab43bb1e42f7f2715a2ac72009391b4c9b5dc450f1a63c2482541a4bd",
+    "verification": "official documentation / author repository; not an independent field validation"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/main/docs/web/docs/Publications.md",
+    "accessed": "2026-10-16",
+    "sha256": "200246ab3a871d4941e45c33ac531638c472c0419bbfd7c198d4311e3c5a69e5",
+    "verification": "official documentation / author repository; not an independent field validation"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/wingsweihua/presslight/master/README.md",
+    "accessed": "2026-10-16",
+    "sha256": "7b903f9db5347c812997a6815530a2c05e196ffa5b75ab11c8057e4a2cc4efcc",
+    "verification": "official documentation / author repository; not an independent field validation"
+  }
+]

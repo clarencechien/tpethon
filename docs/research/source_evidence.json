@@ -1,0 +1,136 @@
+{
+  "initial_capture": {
+    "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+    "sources": [
+      {
+        "source": "vd",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobtisv/VDLive.xml",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "d21644dd007442bb902ad1891ff8e70f39b8c186c1d744a8c3ca805e3796ee13",
+        "source_time": "2026-10-16T10:07:40.001+08:00",
+        "record_count": 2082,
+        "file": "raw/vd-d21644dd007442bb902ad1891ff8e70f39b8c186c1d744a8c3ca805e3796ee13.gz"
+      },
+      {
+        "source": "vd_static",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobtisv/VD.xml",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "b8ac08fc3aefd6f21c2aa7166979f94b743773849fe5cd2365507db73e0e20f5",
+        "source_time": "2026-10-16T00:00:00.000+08:00",
+        "record_count": 641,
+        "file": "raw/vd_static-b8ac08fc3aefd6f21c2aa7166979f94b743773849fe5cd2365507db73e0e20f5.gz"
+      },
+      {
+        "source": "bus",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetEstimateTime.gz",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "ed348a5f6c1a6c2730ad211d65279c1ba7f69950b94af7f498bccafcc490107e",
+        "source_time": "2026/10/16 10:08:30",
+        "record_count": 29402,
+        "file": "raw/bus-ed348a5f6c1a6c2730ad211d65279c1ba7f69950b94af7f498bccafcc490107e.gz"
+      },
+      {
+        "source": "stops",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetStop.gz",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "0fc9168fb865b18f6ea4cdcd2f5d81e0eadf3c52212b7d4e66515a60ed51b569",
+        "source_time": "2026/10/16 10:03:04",
+        "record_count": 28810,
+        "file": "raw/stops-0fc9168fb865b18f6ea4cdcd2f5d81e0eadf3c52212b7d4e66515a60ed51b569.gz"
+      },
+      {
+        "source": "routes",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetRoute.gz",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "b7d6e684207712eb4208c9ab59279525381161d21cc5bc22ce09fd69929af047",
+        "source_time": "2026/10/16 10:03:04",
+        "record_count": 791,
+        "file": "raw/routes-b7d6e684207712eb4208c9ab59279525381161d21cc5bc22ce09fd69929af047.gz"
+      },
+      {
+        "source": "bus_gps",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetBusData.gz",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "782af33a96f0acd25c604eb0ba54505b6236d59715e4d0072823a2aa4bd76713",
+        "source_time": "2026/10/16 10:08:35",
+        "record_count": 2103,
+        "file": "raw/bus_gps-782af33a96f0acd25c604eb0ba54505b6236d59715e4d0072823a2aa4bd76713.gz"
+      },
+      {
+        "source": "bus_geometry",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/TstBusShape.json",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "83647a05f24ca0318e870a524a74eeca720707a446580aecd029d707ca274577",
+        "source_time": null,
+        "record_count": 1003,
+        "file": "raw/bus_geometry-83647a05f24ca0318e870a524a74eeca720707a446580aecd029d707ca274577.gz"
+      },
+      {
+        "source": "stop_locations",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetStopLocation.gz",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "05a733d9a62fbbf692a38ecdf0ee6d046ff4ca5fbe96c8f8f2207ee9b3b07e1f",
+        "source_time": "2026/10/16 09:46:02",
+        "record_count": 5374,
+        "file": "raw/stop_locations-05a733d9a62fbbf692a38ecdf0ee6d046ff4ca5fbe96c8f8f2207ee9b3b07e1f.gz"
+      },
+      {
+        "source": "cctv",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobtisv/CCTV.xml",
+        "fetched_at": "2026-10-16T10:08:34.185298+08:00",
+        "error": null,
+        "sha256": "f88d6940188367dc78a1853753cc870d772ae3498681435b02043170468c3229",
+        "source_time": "2026-10-16T00:00:00.000+08:00",
+        "record_count": 383,
+        "file": "raw/cctv-f88d6940188367dc78a1853753cc870d772ae3498681435b02043170468c3229.gz"
+      }
+    ],
+    "lane_observations": 2082,
+    "distinct_observation_times": 1
+  },
+  "second_capture": {
+    "fetched_at": "2026-10-16T10:09:49.976451+08:00",
+    "sources": [
+      {
+        "source": "vd",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobtisv/VDLive.xml",
+        "fetched_at": "2026-10-16T10:09:49.976451+08:00",
+        "error": null,
+        "sha256": "b4fae9fade4321319da75dd1b540dd1bc3e36048b5ec5b012642f0e49e1347c2",
+        "source_time": "2026-10-16T10:08:40.002+08:00",
+        "record_count": 2082,
+        "file": "raw/vd-b4fae9fade4321319da75dd1b540dd1bc3e36048b5ec5b012642f0e49e1347c2.gz"
+      },
+      {
+        "source": "bus",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetEstimateTime.gz",
+        "fetched_at": "2026-10-16T10:09:49.976451+08:00",
+        "error": null,
+        "sha256": "3f9265b81c8517b17e2ff9a217b62b5065289df9050dd22d2e89af29d6390065",
+        "source_time": "2026/10/16 10:09:45",
+        "record_count": 29402,
+        "file": "raw/bus-3f9265b81c8517b17e2ff9a217b62b5065289df9050dd22d2e89af29d6390065.gz"
+      },
+      {
+        "source": "bus_gps",
+        "url": "https://tcgbusfs.blob.core.windows.net/blobbus/GetBusData.gz",
+        "fetched_at": "2026-10-16T10:09:49.976451+08:00",
+        "error": null,
+        "sha256": "0730b69651d7463c51084cd67232500a06cefca7a0f9bd1cb413aea6892f9e19",
+        "source_time": "2026/10/16 10:09:45",
+        "record_count": 2101,
+        "file": "raw/bus_gps-0730b69651d7463c51084cd67232500a06cefca7a0f9bd1cb413aea6892f9e19.gz"
+      }
+    ],
+    "lane_observations": 4164,
+    "distinct_observation_times": 2
+  }
+}

@@ -61,3 +61,15 @@ node --check static/app.js
 測試涵蓋異常／過期資料、負值公車預估、匯入時區／重複／重疊區間與捷運 OD 彙整。瀏覽器驗證可使用 Playwright 搭配系統 `/usr/bin/chromium`；Python app 本身不依賴 Playwright。
 
 已在目前環境驗證 2026-09 月資料（8,240,400 筆原始 OD），資料留在 `local-data/metro.json`。更新失敗時保留既有成功資料。瀏覽器整合測試需先啟動服務：`python tests/browser_smoke.py`，會測試匯入後還原原有資料；請勿與使用者匯入同時執行。
+
+## 交通分析研究與更多資料
+
+[內湖交通研究報告](docs/research/NEIHU_RESEARCH.md)整理已取得的 VD 車道歷史、公車 GPS／路線軌跡／站點、捷運來源 OD 分析，以及文獻核對程度、缺漏資料和改善試辦設計。
+
+```sh
+python scripts/collect_transport.py
+python scripts/collect_transport.py --dynamic-only
+python scripts/analyze_metro_od.py
+```
+
+採集為單次操作，沒有自動常駐；資料保存於 Git 忽略的 `local-data/research/`。目前只驗證兩次歷史採樣，尚不具備完整晨尖峰歷史。參見研究報告中的限制與排程注意事項。
