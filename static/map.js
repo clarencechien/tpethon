@@ -25,7 +25,7 @@ const reference=()=>historical()&&selectedFrame()?Date.parse(selectedFrame().cap
 const selectedFrame=()=>data?.frames[index];
 function popupLine(root,label,value){const row=node('div',undefined,'popup-line');row.append(node('span',label),node('strong',value));root.append(row);}
 function selectRoad(row){selectedId=row.id;const marker=markers.get(row.id);if(marker){map.setView(marker.getLatLng(),Math.max(map.getZoom(),15));L.popup().setLatLng(marker.getLatLng()).setContent(marker.getPopup().getContent()).openOn(map);}renderDetail(row);}
-function renderDetail(row){const root=$('detail');root.replaceChildren();if(!row){const box=node('div');box.append(node('div','EVIDENCE, NOT A GUESS','eyebrow'),node('h2','點選一個熱點，查看判讀依據。'),node('p','車速、占有率、車流與來源時間一起看；單張快照不能證明排隊原因。'));root.append(box);return;}
+function renderDetail(row){const root=$('detail');root.replaceChildren();if(!row){const box=node('div');box.append(node('div','觀測依據','eyebrow'),node('h2','點選一個熱點，查看判讀依據。'),node('p','車速、占有率、車流與來源時間一起看；單張快照不能證明排隊原因。'));root.append(box);return;}
 const box=node('div'),state=classify(row,reference()),evidence=repeatedEvidence(row.id,data.frames,index);
 box.append(node('div',labels[state],'eyebrow'),node('h2',row.name+' · '+(row.direction||'方向未知')),node('p',`${row.vd_id} · Link ${row.link_id} · ${clock(row.timestamp)}`),node('p',`選定快照前一小時：${evidence.total} 次有效觀測，${evidence.hot} 次符合熱點門檻。${evidence.total<3?'樣本不足，尚不能判定持續性。':'離散快照不代表期間持續壅塞。'}`));
 const metrics=node('div',undefined,'detail-grid');for(const [label,value] of [['車道平均車速 km/h',fmt(row.speed)],['平均占有率 %',fmt(row.occupancy)],['來源區間車輛觀測',fmt(row.volume)]]){const n=node('div');n.append(node('span',label),node('strong',value));metrics.append(n);}root.append(box,metrics);

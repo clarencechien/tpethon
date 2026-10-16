@@ -47,7 +47,7 @@ with sync_playwright() as p:
  page.locator('.report-actions a[href="map.html?view=today-am"]').click()
  page.wait_for_function("document.querySelector('#period').value==='am'")
  assert page.locator('#observation-date').input_value()==day
- assert '總覽報告' in page.locator('nav').inner_text()
+ assert '總覽報告' in page.locator('header nav').inner_text()
  bad=browser.new_page();bad.route('**/data/dashboard.json',lambda r:r.fulfill(status=200,content_type='application/json',body=json.dumps(fixture)))
  bad.goto('http://127.0.0.1:8001/')
  bad.wait_for_function("document.querySelector('#morning-coverage').textContent==='0 / 10 格'")
@@ -68,7 +68,7 @@ with sync_playwright() as p:
   assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),path
   assert page.evaluate('parseFloat(getComputedStyle(document.querySelector("p")).fontSize)>=20'),path
   assert page.evaluate('parseFloat(getComputedStyle(document.querySelector(".fine")).fontSize)>=16'),path
-  assert page.locator('nav').get_by_text('快速公車試算',exact=True).is_visible(),path
+  assert page.locator('header nav').get_by_text('資料與研究',exact=True).is_visible(),path
  assert not errors,errors
  print('PASS: report evidence, unknown vs missing, no scheduled run, growth assumptions, map navigation, desktop/mobile.')
  browser.close()

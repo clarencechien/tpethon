@@ -24,6 +24,7 @@ with sync_playwright() as p:
     assert page.locator('#display').input_value()=='heat'
     assert page.locator('.leaflet-overlay-pane path').count()>0
     assert page.locator('.vd-marker').count()==0
+    page.locator('#map-options > summary').click()
     page.locator('#display').select_option('both')
     assert page.locator('.vd-marker').count()==2
     page.locator('#corridor').select_option('堤頂');page.locator('#direction').select_option('N')

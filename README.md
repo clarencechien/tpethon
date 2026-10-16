@@ -170,3 +170,10 @@ node --test tests/simulation_logic.test.mjs
 [互動 BRT 實驗](https://clarencechien.github.io/tpethon/brt.html) 比較施工、混流加班車與完整 BRT；納入一般車道減少、有限車隊、乘客排隊、實測 VD 相對型態與年成長。研究依據、公式與限制見 [BRT_TRANSITION.md](docs/BRT_TRANSITION.md)。未校正的結果不能視為內湖實測減塞率。
 
 重現：`node scripts/run_brt.mjs`；測試：`node --test tests/brt_logic.test.mjs`。
+
+## 公民閱讀與研究入口
+
+- [總覽](https://clarencechien.github.io/tpethon/) → 現況、方案、施工有無對策。
+- [封路與單行示範](https://clarencechien.github.io/tpethon/network.html) → 假想路網的使用者均衡，不是內湖預測。
+- [資料、方法與引用](https://clarencechien.github.io/tpethon/methods.html) → 各頁數字的資料來源、公式、論文閱讀狀態與下一步。
+- [實際道路實驗計畫](docs/NETWORK_EXPERIMENTS.md) → 資料、現況驗證、封路／單行矩陣與評估指標。

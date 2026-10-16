@@ -8,6 +8,7 @@ with sync_playwright() as p:
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto('http://127.0.0.1:8001/simulation.html')
     page.wait_for_function("document.querySelectorAll('#growth-years-table tr').length===6")
+    page.locator('#growth-details > summary').click()
     assert '已套用' in page.locator('#growth-source').inner_text()
     assert '18,838.14' in page.locator('#growth-metro-source').inner_text()
     assert '11,041' in page.locator('#simulation-summary').inner_text()
@@ -55,6 +56,7 @@ with sync_playwright() as p:
     absent = browser.new_page(); absent.route('**/data/metro.json', lambda r: r.fulfill(status=503, body='unavailable'))
     absent.goto('http://127.0.0.1:8001/simulation.html')
     absent.wait_for_function("document.querySelectorAll('#growth-years-table tr').length===6")
+    absent.locator('#growth-details > summary').click()
     assert absent.locator('#growth-years-table tr').first.locator('td').last.inner_text() == '—'
     print('PASS: observed AM/PM shapes, compound and negative growth, unchanged baseline, export provenance, invalid data, missing metro, mobile.')
     browser.close()

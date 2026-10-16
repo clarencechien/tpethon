@@ -1,0 +1,295 @@
+{
+  "checked_on": "2026-10-16",
+  "bibliography_provider": "Crossref REST API",
+  "papers": [
+    {
+      "DOI": "10.1287/trsc.1050.0127",
+      "title": [
+        "On a Paradox of Traffic Planning"
+      ],
+      "author": [
+        {
+          "given": "Dietrich",
+          "family": "Braess",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Faculty of Mathematics, Ruhr-University Bochum, 44780 Bochum, Germany"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Anna",
+          "family": "Nagurney",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Finance and Operations Management, Isenberg School of Management, University of Massachusetts, Amherst, Massachusetts 01003"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tina",
+          "family": "Wakolbinger",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Finance and Operations Management, Isenberg School of Management, University of Massachusetts, Amherst, Massachusetts 01003"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2005,
+            11
+          ]
+        ]
+      },
+      "container-title": [
+        "Transportation Science"
+      ],
+      "volume": "39",
+      "issue": "4",
+      "page": "446-450"
+    },
+    {
+      "DOI": "10.1680/muen.2002.151.1.13",
+      "title": [
+        "Disappearing traffic? The story so far"
+      ],
+      "author": [
+        {
+          "given": "S.",
+          "family": "Cairns",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "ESRC Transport Studies Unit, University College London"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "S.",
+          "family": "Atkins",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University of Southampton"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "P.",
+          "family": "Goodwin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University College London"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2002,
+            3
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the Institution of Civil Engineers - Municipal Engineer"
+      ],
+      "volume": "151",
+      "issue": "1",
+      "page": "13-22"
+    },
+    {
+      "DOI": "10.1109/itsc.2018.8569938",
+      "title": [
+        "Microscopic Traffic Simulation using SUMO"
+      ],
+      "author": [
+        {
+          "given": "Pablo Alvarez",
+          "family": "Lopez",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Evamarie",
+          "family": "Wiessner",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Michael",
+          "family": "Behrisch",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Laura",
+          "family": "Bieker-Walz",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jakob",
+          "family": "Erdmann",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yun-Pang",
+          "family": "Flotterod",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Robert",
+          "family": "Hilbrich",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Leonhard",
+          "family": "Lucken",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Johannes",
+          "family": "Rummel",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Peter",
+          "family": "Wagner",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2018,
+            11
+          ]
+        ]
+      },
+      "container-title": [
+        "2018 21st International Conference on Intelligent Transportation Systems (ITSC)"
+      ],
+      "volume": null,
+      "issue": null,
+      "page": "2575-2582"
+    }
+  ],
+  "full_text_status": "Publisher/author PDF requests blocked; bibliographic metadata only. No effect size extracted.",
+  "official_method": {
+    "url": "https://sumo.dlr.de/docs/Demand/Dynamic_User_Assignment.html",
+    "read": true,
+    "sha256": "d09378cec61ffe793158c545bf142c12833131f0dea71696baaf1cc1571bf2c4"
+  },
+  "implementation_note": "Static four-node example and numbers are authored here and verified analytically; not a reproduction of paper data or a Neihu forecast."
+}

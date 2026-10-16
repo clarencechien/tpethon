@@ -12,6 +12,7 @@ with sync_playwright() as p:
     page.goto(URL)
     page.wait_for_function("document.querySelectorAll('#simulation-results tr').length===6")
     page.locator('#reset-simulation').click()
+    page.locator('#scenario-matrix > summary').click()
     assert page.locator('#simulation-results tr').nth(1).locator('td').nth(3).inner_text() == '29'
     assert '移往外圍' in page.locator('#simulation-diagnosis').inner_text()
     assert page.locator('#simulation-sensitivity tr').count() == 3
@@ -27,6 +28,7 @@ with sync_playwright() as p:
     assert len(report['results']) == 6
     for r in report['results']:
         assert abs(r['carPeople'] + r['busPassengers'] - report['inputs']['people']) < 1e-6
+    page.locator('#sim-baseline > summary').click()
     page.locator('#sim-people').fill('')
     page.wait_for_function("!document.querySelector('#simulation-error').hidden")
     assert page.locator('#simulation-results tr').count() == 0
@@ -47,6 +49,7 @@ with sync_playwright() as p:
     missing.goto(URL)
     missing.wait_for_function("document.querySelector('#evidence').textContent.includes('實測參考暫不可用')")
     assert missing.locator('#simulation-results tr').count() == 0
+    missing.locator('#growth-details > summary').click()
     missing.locator('#growth-mode').select_option('synthetic')
     missing.wait_for_function("document.querySelectorAll('#simulation-results tr').length===6")
     print('PASS: simulation scenarios, playback, assumptions export, invalid and zero input, mobile layout, and missing actual data.')

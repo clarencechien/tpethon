@@ -1,3 +1,4 @@
+import {resultCards} from './ui.js';
 import {defaults,experiment,runScenario,modelVersion} from './simulation_logic.js';
 import {projectInputs,profileWeights} from './growth_logic.js';
 import {initGrowth,readGrowth,renderGrowth,clearGrowth} from './growth.js';
@@ -5,12 +6,12 @@ const $=id=>document.getElementById(id);
 const node=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;return e;};
 const fmt=(value,digits=0)=>value.toLocaleString('zh-TW',{maximumFractionDigits:digits});
 const fields=[
- ['people','基期原搭私車人次（假設）',0,100000,100,'basic'],
+ ['people','起始私車使用者（假設人次）',0,100000,100,'basic'],
  ['occupancy','私車平均乘員（人）',1,10,.1,'basic'],
- ['peakMinutes','基期尖峰長度（分）',30,240,15,'basic'],
- ['innerShare','原走主要通道（%）',0,100,5,'basic',100],
- ['innerCapacity','主要通過能力（PCU／時）',50,15000,50,'basic'],
- ['outerCapacity','外圍通過能力（PCU／時）',50,15000,50,'basic'],
+ ['peakMinutes','尖峰持續多久（分鐘）',30,240,15,'basic'],
+ ['innerShare','原走主要道路的比例（%）',0,100,5,'basic',100],
+ ['innerCapacity','主要道路每小時能通過多少（換算小客車）',50,15000,50,'basic'],
+ ['outerCapacity','周邊道路每小時能通過多少（換算小客車）',50,15000,50,'basic'],
  ['busShare','改搭巴士（%）',0,100,5,'policy',100],
  ['staggerShare','剩餘私車延後出發（%）',0,100,5,'policy',100],
  ['shiftMinutes','延後多久（分）',0,120,15,'policy'],
@@ -48,7 +49,7 @@ function renderChart(){
  const line=(rows,get)=>'M '+rows.map(v=>`${x(v.minute).toFixed(2)},${y(get(v)).toFixed(2)}`).join(' L ');
  const ticks=Array.from({length:5},(_,i)=>{const v=top*i/4;return `<line x1="60" x2="800" y1="${y(v)}" y2="${y(v)}" stroke="#dce5e1"/><text x="50" y="${y(v)+4}" text-anchor="end">${Math.round(v)}</text>`;}).join('');
  const times=Array.from({length:7},(_,i)=>{const t=Math.round(duration*i/6);return `<text x="${x(t)}" y="285" text-anchor="middle">${clock(t)}</text>`;}).join('');
- $('simulation-chart').innerHTML=`<svg viewBox="0 0 840 310" role="img" aria-label="假設模型排隊曲線，灰色參考總排隊、橘色主要通道、藍色外圍"><g fill="#4b6560" font-size="12"><text x="60" y="20">排隊 PCU · 假設模型</text>${ticks}${times}</g><path d="${line(base.series,v=>v.innerQueue+v.outerQueue)}" stroke="#7d8987" stroke-width="2" stroke-dasharray="6 4" fill="none"/><path d="${line(r.series,v=>v.innerQueue)}" stroke="#bd6a25" stroke-width="3" fill="none"/><path d="${line(r.series,v=>v.outerQueue)}" stroke="#247da8" stroke-width="3" fill="none"/><line id="sim-cursor" y1="35" y2="260" stroke="#314f49" stroke-dasharray="3 3"/></svg>`;
+ $('simulation-chart').innerHTML=`<svg viewBox="0 0 840 310" role="img" aria-label="假設模型排隊曲線，灰色參考總排隊、橘色主要通道、藍色外圍"><g fill="#4b6560" font-size="18"><text x="60" y="20">排隊 PCU · 假設模型</text>${ticks}${times}</g><path d="${line(base.series,v=>v.innerQueue+v.outerQueue)}" stroke="#7d8987" stroke-width="2" stroke-dasharray="6 4" fill="none"/><path d="${line(r.series,v=>v.innerQueue)}" stroke="#bd6a25" stroke-width="3" fill="none"/><path d="${line(r.series,v=>v.outerQueue)}" stroke="#247da8" stroke-width="3" fill="none"/><line id="sim-cursor" y1="35" y2="260" stroke="#314f49" stroke-dasharray="3 3"/></svg>`;
  $('simulation-minute').max=duration;$('simulation-minute').value=Math.min(Number($('simulation-minute').value),duration);
  replay();
 }
@@ -67,12 +68,22 @@ function replay(){
 }
 function renderComparison(){
  const r=current(),base=results[0];
- let message=`${r.label}：主要最高排隊 ${fmt(r.maxInnerQueue)}、外圍 ${fmt(r.maxOuterQueue)} PCU。`;
- if(r.residualPCU>1e-7||base.residualPCU>1e-7)message+=`模擬截止仍有未排空需求（本情境 ${fmt(r.residualPCU)} PCU）；時間總量為下限，不能據此比較改善幅度。`;
- else message+=`排隊總量較參考 ${change(r.queuePCUHours,base.queuePCUHours)}；加上假設自由行駛與繞路後，PCU 時間總量 ${change(r.totalPCUHours,base.totalPCUHours)}。`;
- if(r.divertedCars>0)message+=` ${fmt(r.divertedCars)} 私車旅次移往外圍，額外繞路 ${fmt(r.addedDetourCarHours,1)} 車·時。`;
- if(r.busPassengers>0)message+=` ${fmt(r.busPassengers)} 人改搭巴士，${r.busDepartures} 班、尖峰連續一小時最多 ${r.busiestHourDepartures} 班；${r.operatingFleet} 輛營運＋${r.reserveFleet} 輛備車。`;
- message+=' 結果只在這組假設內成立；巴士等車、乘客旅行時間與營運成本尚未比較。';
+ const active={baseline:[],bus:['busShare'],stagger:['staggerShare','shiftMinutes'],restrict:['restrictShare'],combined:['busShare','staggerShare','shiftMinutes','restrictShare'],allbus:[]}[selected]||[];
+ for(const key of ['busShare','staggerShare','shiftMinutes','restrictShare']){const input=$('sim-'+key);input.closest('label').hidden=!active.includes(key)&&input.checkValidity();}
+ $('policy-note').textContent=active.length?'只顯示這個方案會使用的比例；其他方案保留各自設定。':'這個方案不需要另外設定政策比例；可展開起始假設調整人數與道路容量。';
+
+ resultCards($('policy-cards'),[
+  {title:'所有車輛合計排隊時間',unit:' 小時',note:'大小車換算為小客車後加總；不是每個人的通勤時間。',series:[{label:'維持原狀',value:base.queuePCUHours,lowerBound:base.residualPCU>1e-7},{label:r.label,value:r.queuePCUHours,lowerBound:r.residualPCU>1e-7}]},
+  {title:'周邊道路最多排多少車？',unit:' 輛',note:'換算成小客車；主要道路變快時，也要看周邊是否更塞。',series:[{label:'維持原狀',value:base.maxOuterQueue},{label:r.label,value:r.maxOuterQueue}]}
+ ]);
+
+ let message=`${r.label}：`;
+ if(r.residualPCU>1e-7||base.residualPCU>1e-7)message+=`追蹤結束仍有車沒走完，排隊時間只是下限，不能據此判定改善。`;
+ else if(base.queuePCUHours>1e-7){const delta=(r.queuePCUHours/base.queuePCUHours-1)*100;message+=`合計排隊時間比維持原狀${delta>0?'增加':'減少'} ${fmt(Math.abs(delta),1)}%。`;}
+ else message+='原狀沒有排隊，不能計算改善百分比。';
+ if(r.divertedCars>0)message+=` ${fmt(r.divertedCars)} 私車旅次移往外圍，請一起看周邊道路是否更塞。`;
+ if(r.busPassengers>0)message+=` ${fmt(r.busPassengers)} 人改搭巴士，需要 ${r.operatingFleet} 輛營運、${r.reserveFleet} 輛備車。`;
+ message+=' 這是換算小客車後的合計排隊，不是每個人的省時比例；尚未算乘客等車與營運成本。';
  $('simulation-diagnosis').textContent=message;
  sensitivity=[.8,1,1.2].map(scale=>{
   const a={...inputs,innerCapacity:inputs.innerCapacity*scale,outerCapacity:inputs.outerCapacity*scale};
@@ -103,7 +114,7 @@ function run(){
   render();
  }catch(e){
   results=[];growthReport=null;clearGrowth();$('simulation-error').hidden=false;$('simulation-error').textContent=e.message;
-  for(const id of ['simulation-results','simulation-chart','simulation-sensitivity'])$(id).replaceChildren();
+  for(const id of ['simulation-results','simulation-chart','simulation-sensitivity','policy-cards'])$(id).replaceChildren();
   $('simulation-summary').textContent='輸入無效；已清除上一組結果。';$('simulation-diagnosis').textContent='修正輸入後重新計算。';
   for(const id of ['inner','outer']){$('channel-'+id).style.background='#eef1ef';$('channel-'+id).querySelector('strong').textContent='—';$('channel-'+id).querySelector('small').textContent='沒有有效結果';}
   $('download-simulation').disabled=true;$('simulation-choice').disabled=true;$('simulation-minute').disabled=true;

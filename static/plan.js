@@ -1,3 +1,4 @@
+import {bars} from './ui.js';
 import {busPlan} from './plan_logic.js';
 const $=id=>document.getElementById(id),n=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;return e;};
 const pct=v=>Number.isFinite(v)?(v*100).toFixed(1)+'%':'—';
@@ -14,18 +15,19 @@ async function read(url){const r=await fetch(url);if(!r.ok)throw Error('資料�
 function renderWeeks(){
  if(!manifest)return;const period=$('week-period').value;
  const updated=manifest.generated_at?new Date(manifest.generated_at).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false}):'尚未記錄';
- $('weekly-period').textContent=`摘要更新：${updated}（台北） · 歷史資料到 ${manifest.latest_available_day||'尚無完整日期'} · 以 ${manifest.as_of} 劃分上週／本週；只計已發布歷史。預定每日 11:23、23:23 更新，Actions 可能延遲；歷史通常隔日上午發布，最新即時快照不混入週摘要。今日晨峰若未即時保存，當天無法用歷史 API 補回；每日回補也同步更新地圖逐日回放。`;
+ $('weekly-period').textContent=`歷史資料到 ${manifest.latest_available_day||'未知'}；摘要更新於 ${updated}（台北時間）。當天資料若未即時保存，需隔日回補。`;
  $('week-cards').replaceChildren();
  for(const [i,w] of weeks.entries()){
   const box=n('article','');box.className='week-card';box.append(n('b',(i===0?'上週':'本週')+' · '+w.start+' – '+w.end),n('strong',w.available_days+' / 7 天'),n('p',w.complete?'七個日曆日皆已取得；每日仍可能有觀測缺漏。':'部分週：未發布、未來或下載缺漏日期不補零。'));$('week-cards').append(box);
  }
  const m=manifest.matched_weekdays[period];
+ bars($('weekly-bars'),[{label:'上週・低速觀測',value:Number.isFinite(m.previous?.slow_share)?m.previous.slow_share*100:NaN},{label:'本週・低速觀測',value:Number.isFinite(m.current?.slow_share)?m.current.slow_share*100:NaN}],{max:100,unit:'%'});
  $('matched-comparison').textContent=m.day_pairs.length?`同星期配對 ${m.day_pairs.length} 組、${m.paired_bins} 個時間格：上週 ${pct(m.previous.slow_share)} → 本週 ${pct(m.current.slow_share)} 低速觀測；差 ${m.difference_percentage_points>=0?'+':''}${m.difference_percentage_points.toFixed(1)} 個百分點。這是觀測差異，尚未控制天氣或其他因素。`:'共同日期與有效觀測不足，不能比較兩週。';
  $('weekly-hotspots').replaceChildren();
  for(const [i,w] of weeks.entries()){
   const box=n('article','');box.className='week-card';box.append(n('b',i===0?'上週候選':'本週候選'));
   const candidates=w.hotspot_candidates?.[period]||[];
-  for(const c of candidates.slice(0,5))box.append(n('p',`${c.road} ${c.direction||''} · ${pct(c.hot_share)} · ${c.observed_days} 天`));
+  for(const c of candidates.slice(0,5))box.append(n('p',`${c.road} ${{N:'往北',S:'往南',E:'往東',W:'往西',NE:'往東北',NW:'往西北',SE:'往東南',SW:'往西南'}[c.direction]||c.direction||''} · ${pct(c.hot_share)} · ${c.observed_days} 天`));
   if(!candidates.length)box.append(n('p','沒有足夠有效觀測可列出候選。'));$('weekly-hotspots').append(box);
  }
  $('daily-rows').replaceChildren();

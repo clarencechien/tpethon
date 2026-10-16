@@ -15,6 +15,7 @@ with sync_playwright() as p:
     page.wait_for_function("document.querySelector('#source').textContent.includes('套用')")
     page.locator('#period').select_option('pm')
     page.wait_for_function("!document.querySelector('#results').hidden")
+    page.locator('#brt-replay > summary').click()
     page.locator('#replay').fill('180');assert page.locator('#clock').inner_text()=='19:00'
     page.locator('#b-year').fill('2')
     page.wait_for_function("document.querySelector('#milestone').textContent.includes('第 2 年')")
@@ -23,6 +24,7 @@ with sync_playwright() as p:
     assert report['profile']['start_minute']==1020 and report['profile']['descriptor']['sha256']
     assert report['scenarios'][3]['privatePeople']==10404
     assert len(report['annual'])==5 and len(report['scan']['rows'])==11
+    page.locator('#brt-service > summary').click()
     page.locator('#b-fleet').fill('0')
     page.wait_for_function("document.querySelector('#verdict').textContent.includes('尚未清空')")
     assert '等車輛返回' in page.locator('#capacity').inner_text()

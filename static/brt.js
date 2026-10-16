@@ -1,3 +1,4 @@
+import {resultCards} from './ui.js';
 import {brtDefaults,brtVersion,brtScenarios,conversionScan,transitionYears} from './brt_logic.js';
 import {profileWeights} from './growth_logic.js';
 const $=id=>document.getElementById(id),fmt=(v,d=0)=>v===null?'—':Number(v).toLocaleString('zh-TW',{maximumFractionDigits:d});
@@ -7,7 +8,7 @@ const fields=[
  ['people','起始年的私車使用者（人／尖峰）',0,100000,100],['existingBusPeople','起始年的既有公車乘客（人／尖峰）',0,50000,100],['conversion','主要道路的私車使用者，有幾成改搭（%）',0,100,1,100],['growth','需求年成長率（%）',-10,10,.1,100],['years','通車前模擬年數',1,15,1],['year','檢視開始施工後第幾年',0,14,1],['headway','加班車／BRT 班距（分）',.5,15,.5],['fleet','可出勤車輛（輛）',0,200,1],
  ['lanes','原有主通道單向車道數',1,6,1],['workLanes','施工占用車道數',0,5,1],['laneCapacity','每車道可用容量（PCU／時）',200,2500,50],['workFactor','施工剩餘容量係數（%）',30,100,1,100],['outerCapacity','外圍可用容量（PCU／時）',50,15000,50],['innerShare','私車原走主通道比例（%）',0,100,1,100],['occupancy','私車平均載客（人／車）',1,10,.1],['diversion','剩餘主通道私車改道（%）',0,80,1,100],['seats','公車每班額定載客（人）',10,250,1],['load','可用載客率（%）',10,100,1,100],['existingHeadway','既有公車班距（分）',1,30,.5],['reserve','額外備車比例（%）',0,100,1,100],['busPCU','混流公車小客車當量',1,5,.1],['distance','BRT 單程里程（公里）',1,30,.5],['cruiseSpeed','BRT 非停站行駛速度（km/h）',10,60,1],['stops','單程停站數',0,40,1],['dwellSeconds','BRT 每站停靠（秒）',5,180,1],['clearanceSeconds','單站清空間隔（秒）',5,120,1],['signals','單程路口數',0,50,1],['signalSeconds','優先號誌後每路口延誤（秒）',0,120,1],['recoveryMinutes','每循環折返恢復（分）',0,120,1],['restMinutes','每循環駕駛休息（分）',0,120,1],['mixedCycle','混流公車循環時間（分）',10,480,1],['mixedDwellSeconds','混流公車每站停靠（秒）',5,180,1]];
 for(const [i,[key,label,min,max,step,scale=1]] of fields.entries()){
- const l=el('label',label),input=el('input','');Object.assign(input,{id:`b-${key}`,type:'number',min,max,step,value:brtDefaults[key]*scale,required:true});l.append(input);$(i<8?'basic':'advanced').append(l);
+ const l=el('label',label),input=el('input','');Object.assign(input,{id:`b-${key}`,type:'number',min,max,step,value:brtDefaults[key]*scale,required:true});l.append(input);$(['people','conversion','year'].includes(key)?'basic':i<8?'service-inputs':'advanced').append(l);
 }
 let profiles=[],descriptor=null,profileError='實測型態載入中',report=null;
 const time=m=>`${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(Math.floor(m%60)).padStart(2,'0')}`;
@@ -32,6 +33,7 @@ function render(){
   const p=$('shape').value==='observed'?profiles.find(p=>p.id===$('profile').value):null;if($('shape').value==='observed'&&!p)throw Error(profileError||'缺少實測型態，請選人工示例或稍後重試');
   if(p)a.demandWeights=profileWeights(p);
   $('source').textContent=p?`套用 ${p.name} ${p.direction}，${p.days[0]}–${p.days.at(-1)} 共 ${p.days.length} 個完整參考工作日。每個抽樣權重延展 15 分鐘；原始統計區間未確認，只借用相對分布，不把 VD 相加成人次。觀測通過量也可能受壅塞限制。`:`人工單峰示例。${profileError||`已載入 ${profiles.length} 組實測型態，可在上方切換。`} 私車與公車共用需求分布是假設。`;
+  $('profile').closest('label').hidden=$('shape').value!=='observed';
   const scenarios=brtScenarios(a),scan=conversionScan(a),annual=transitionYears(a);
   report={modelVersion:brtVersion,calibrated:false,period:$('period').value,assumptions:a,profile:p?{...p,descriptor}:null,scenarios,scan,annual,research:'data/simulation/brt-research.json'};
   $('error').textContent='';$('results').hidden=false;$('download').disabled=false;$('lanes').replaceChildren();$('comparison').replaceChildren();$('legend').replaceChildren();
@@ -42,6 +44,11 @@ function render(){
    const label=el('span',names[r.mode]);label.style.color=colors[r.mode];$('legend').append(label);
   }
   const b=scenarios[1],r=scenarios[3],complete=x=>x.feasible&&x.residualRoadPCU<1e-7&&x.unservedPassengers<1e-7;
+  if(r.feasible)resultCards($('brt-cards'),[
+   {title:'所有車輛合計排隊時間',unit:' 小時',note:'換算為小客車後加總；未疏解時只列下限。',series:[{label:'施工・維持原服務',value:b.queuePCUHours,lowerBound:b.residualRoadPCU>1e-7},{label:'施工・快速公車',value:r.queuePCUHours,lowerBound:r.residualRoadPCU>1e-7}]},
+   {title:'已上車的人平均等多久？',unit:' 分鐘',note:`快速公車仍有 ${fmt(r.unservedPassengers)} 人未上車；不能只看已上車者的平均。`,series:[{label:'施工・維持原服務',value:b.meanBoardedWaitMinutes},{label:'施工・快速公車',value:r.meanBoardedWaitMinutes}]}
+  ]);else $('brt-cards').replaceChildren();
+
   $('verdict').textContent=!r.feasible?r.reason:!complete(b)||!complete(r)?'有情境在追蹤窗內尚未清空，不能宣稱改善百分比。請一起檢查未上車乘客與殘餘道路排隊。':b.queuePCUHours<1e-7?'僅施工情境沒有道路排隊，無法計算減塞百分比。':`這組假設下，第 ${a.year} 年 BRT 道路總排隊較僅施工${r.queuePCUHours<=b.queuePCUHours?'減少':'增加'} ${fmt(Math.abs(r.queuePCUHours/b.queuePCUHours-1)*100,1)}%。這是 PCU·時的模型差異，不是內湖實測減塞率。`;
   $('capacity').textContent=r.feasible?`BRT 可用 ${r.seats} 人／班；有效班距 ${fmt(r.effectiveHeadway,1)} 分、單程 ${fmt(r.oneWayBRTMinutes,1)} 分、循環 ${fmt(r.cycleMinutes,1)} 分。長期可提供約 ${fmt(r.effectiveSeatsPerHour)} 人／時／方向；班表需 ${r.requiredFleet} 輛出勤、另備 ${r.reserveFleet} 輛。${a.fleet<r.requiredFleet?'可出勤車不足，模擬會等車輛返回才發車；零車隊則無法服務。':''}${r.stationSaturation>.4?'站點停靠占用超過 40%：ITDP 提醒可能產生公車排隊；此簡模未重現隨機站點回堵，須微觀模擬驗證。':''}`:'';
   const feasible=scenarios.filter(r=>r.feasible),length=Math.max(...feasible.map(r=>r.series.length)),indices=Array.from({length:Math.ceil(length/10)},(_,i)=>Math.min(length-1,i*10));

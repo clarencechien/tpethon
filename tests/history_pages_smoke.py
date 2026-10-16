@@ -9,6 +9,7 @@ with sync_playwright() as p:
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto('http://127.0.0.1:8001/map.html')
     page.wait_for_function("document.querySelector('#archive-day').options.length>1")
+    page.locator('#archive-options').evaluate('(e)=>e.open=true')
     page.locator('#archive-day').select_option('2026-10-15')
     page.wait_for_function("document.querySelector('#snapshot-select').options.length===10 && !document.querySelector('#snapshot-select').disabled")
     assert '10/10' in page.locator('#selection-note').inner_text()
@@ -30,6 +31,7 @@ with sync_playwright() as p:
     page.locator('#view-latest').click()
     assert '10/16' in page.locator('#source-time').inner_text()
     page.set_viewport_size({'width':390,'height':844})
+    page.locator('#archive-options').evaluate('(e)=>e.open=true')
     page.locator('#archive-day').select_option('2026-10-15')
     page.wait_for_function("document.querySelector('#snapshot-select').options.length===10 && !document.querySelector('#snapshot-select').disabled")
     page.screenshot(path='/tmp/neihu-github-history-mobile.png',full_page=True)
@@ -38,6 +40,7 @@ with sync_playwright() as p:
     # A failed data file must be distinguishable from a day with no congestion.
     bad=browser.new_page();bad.route('**/data/history/2026-10-15.json',lambda route:route.fulfill(status=503,body='unavailable'))
     bad.goto('http://127.0.0.1:8001/map.html');bad.wait_for_function("document.querySelector('#archive-day').options.length>1")
+    bad.locator('#archive-options > summary').click()
     bad.locator('#archive-day').select_option('2026-10-15')
     bad.wait_for_function("document.querySelector('#archive-status').textContent.includes('503')")
     assert bad.locator('#stat-hot').inner_text()=='—'
