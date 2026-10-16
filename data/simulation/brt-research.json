@@ -1,8 +1,8 @@
 {
   "checked_on": "2026-10-16",
-  "publisher": "Institute for Transportation and Development Policy (ITDP)",
+  "publisher": "ITDP; WRI/EMBARQ",
   "source_version": "9d3057044d8201a84d7c35fa67789e4cbcf099a4",
-  "evidence_type": "Published planning guide; historical descriptive cases, not a Neihu causal evaluation",
+  "evidence_type": "Planning standard, research synthesis, passenger surveys and institutional case reports; not a calibrated Neihu causal estimate",
   "sources": [
     {
       "url": "https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/02-why-brt/01-defining-rapid-transit-modes.manu",
@@ -21,13 +21,150 @@
     {
       "url": "https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/08-traffic-impact-assessment/05-estimating-traffic-volumes.manu",
       "supports": "Account for existing buses removed from mixed traffic, buses remaining, modal shift, diversions and turning traffic."
+    },
+    {
+      "id": "itdp-2024",
+      "url": "https://itdp.org/wp-content/uploads/2024/03/ITDP_BRTSTANDARD_APR2024_SINGLE-compressed.pdf",
+      "checked_on": "2026-10-16",
+      "sha256": "01e6b8c9bd3691341fe8edfa85cf3d12bd6b37ae4c130127216edf37214b1a78",
+      "bytes": 11232462,
+      "title": "The BRT Standard, 2024 edition",
+      "published": "2024-03",
+      "printed_pages": [
+        31,
+        33,
+        45
+      ],
+      "pdf_pages": [
+        34,
+        36,
+        48
+      ],
+      "supports": "Minimum BRT: 3 km dedicated corridor, >=4 points for right-of-way and alignment each, >=20 across five basics. Turning restrictions and signal management matter; signal priority is less effective than turn prohibitions.",
+      "limits": "Minimum qualification is not gold certification or evidence of a Neihu effect."
+    },
+    {
+      "id": "wri-2013",
+      "url": "https://www.wri.org/research/social-environmental-and-economic-impacts-bus-rapid-transit",
+      "checked_on": "2026-10-16",
+      "sha256": "02ce23cf79157ab19f33a580f982e97685640fe8bd4718ec275cdf9cc67243fc",
+      "bytes": 5087998,
+      "resolved_url": "https://environmentaldocuments.com/embarq/Social-Environmental-Economic-Impacts-BRT-Bus-Rapid-Transit-EMBARQ.pdf",
+      "title": "Social, Environmental and Economic Impacts of BRT Systems",
+      "published": "2013",
+      "authors": [
+        "Aileen Carrigan",
+        "Robin King",
+        "Juan Miguel Velasquez",
+        "Matthew Raifman",
+        "Nicolae Duduta"
+      ],
+      "printed_pages": [
+        34
+      ],
+      "pdf_pages": [
+        36
+      ],
+      "supports": "Synthesis reports Johannesburg 13 minutes saved per one-way trip (10–20%); Istanbul 52 minutes per day. Also warns lane conversion may slow mixed traffic.",
+      "limits": "Secondary synthesis; original underlying studies not independently verified. No causal congestion reduction inferred."
+    },
+    {
+      "id": "rio-2015",
+      "url": "https://itdp.org/2015/05/11/itdp-brazil-survey-finds-transcarioca-brt-reduces-travel-times-cuts-costs/",
+      "checked_on": "2026-10-16",
+      "sha256": "f63e6ee3f60a5f161dfe35fd6b6a7a71d2e459cc666bf814e5587fe0cb323cca",
+      "bytes": 124465,
+      "title": "ITDP Brazil Survey Finds TransCarioca BRT Reduces Travel Times, Cuts Costs",
+      "published": "2015-05-11",
+      "supports": "December 2014 survey of 1,005 riders: mean travel time reduction 35%; former car users only 4% of riders, with 10% average time saving; >26% wait >10 minutes.",
+      "limits": "Institutional summary of rider survey; self-reported, no matched counterfactual. 4% denominator is BRT survey respondents, not all motorists."
+    },
+    {
+      "id": "guangzhou-2011",
+      "url": "https://itdp.org/2011/08/17/guangzhou-brt-reduces-co2-emissions-by-86000-tonnes-annually/",
+      "checked_on": "2026-10-16",
+      "sha256": "ef255d93d0ce664069bc03c1bdeb01f3376492a7470e0e58815aff333b6d00c7",
+      "bytes": 119707,
+      "title": "Guangzhou BRT Reduces CO2 Emissions by 86,000 Tonnes Annually",
+      "published": "2011-08-17",
+      "supports": "ITDP institutional release reports corridor motorist and bus-rider travel-time improvements of 20% and 29%, respectively.",
+      "limits": "Release uses “improved”; underlying interim report link returned 404. Not independently reproduced or established as a causal effect; no Neihu calibration."
     }
   ],
   "unverified_sources": [
     {
-      "url": "https://www.wri.org/research/social-environmental-and-economic-impacts-bus-rapid-transit",
-      "status": "Network domain blocked during research; no numeric claim taken from unread original."
+      "url": "https://www.itdp.org/wp-content/uploads/2014/07/227.-081611_GZBRT_Emissions.pdf",
+      "status": "404 after redirect on 2026-10-16. Institutional release read; linked interim report not obtained."
     }
   ],
-  "neihu_congestion_reduction_percent": null
+  "neihu_congestion_reduction_percent": null,
+  "schema_version": 2,
+  "case_metrics": [
+    {
+      "id": "johannesburg",
+      "source_id": "wri-2013",
+      "city": "Johannesburg",
+      "system": "Rea Vaya",
+      "metric": "passenger_one_way_travel_time_saved",
+      "value": 13,
+      "unit": "minutes/trip",
+      "reported_relative_range_percent": [
+        10,
+        20
+      ],
+      "comparison": "Same destination, previous mode",
+      "population": "Surveyed BRT users",
+      "underlying_reference": "Venter and Vaz (2011)",
+      "application": "Passenger benefit reference only; do not apply to general traffic."
+    },
+    {
+      "id": "istanbul",
+      "source_id": "wri-2013",
+      "city": "Istanbul",
+      "system": "Metrobüs",
+      "metric": "typical_passenger_daily_travel_time_saved",
+      "value": 52,
+      "unit": "minutes/day",
+      "population": "Typical Metrobüs passenger as reported by synthesis",
+      "underlying_reference": "Alpkokin and Ergun (2012), Istanbul Metrobüs: first intercontinental bus rapid transit, pp. 58–66",
+      "application": "Daily metric; not one-way and not a citywide congestion measure."
+    },
+    {
+      "id": "rio",
+      "source_id": "rio-2015",
+      "city": "Rio de Janeiro",
+      "system": "TransCarioca",
+      "metric": "survey_reported_average_travel_time_reduction",
+      "value": 35,
+      "unit": "percent",
+      "sample_size": 1005,
+      "survey_date": "2014-12",
+      "former_car_user_share_of_riders_percent": 4,
+      "former_car_user_time_saving_percent": 10,
+      "application": "Do not equate passenger time savings or former-driver share with reduction of all car trips."
+    },
+    {
+      "id": "guangzhou",
+      "source_id": "guangzhou-2011",
+      "city": "Guangzhou",
+      "system": "Guangzhou BRT",
+      "metric": "institution_reported_corridor_motorist_travel_time_improvement",
+      "value": 20,
+      "unit": "percent",
+      "bus_rider_reported_improvement_percent": 29,
+      "application": "Institutional report only; underlying PDF unavailable; cannot be transferred to Neihu."
+    }
+  ],
+  "quality_flags": [
+    {
+      "source_id": "wri-2013",
+      "printed_page": 34,
+      "pdf_page": 36,
+      "status": "Visually checked against original PDF; excluded from calibration and case metrics",
+      "issues": [
+        "Text calls 13.9 to 7.8 km/h an increase; no corrected number inferred.",
+        "Text calls 14 to 23 km/h an 84% increase; endpoint arithmetic is inconsistent."
+      ]
+    }
+  ]
 }

@@ -6,14 +6,29 @@
 
 ## 查證的研究依據
 
-本次已讀 ITDP 官方公開的 *Online BRT Planning Guide*，固定版本 `9d3057044d8201a84d7c35fa67789e4cbcf099a4`。可機讀來源與限制見 [brt-research.json](../data/simulation/brt-research.json)。這是規劃指南和描述性案例，不是針對內湖的因果研究；沒有宣稱已完成同行評審論文的系統性回顧。
+2026-10-16 已讀 ITDP《2024 BRT Standard》原文、WRI／EMBARQ 2013 年報告的交通影響章節、ITDP 個案發布，以及官方公開的 *Online BRT Planning Guide*，指南固定版本 `9d3057044d8201a84d7c35fa67789e4cbcf099a4`。可機讀來源與限制見 [brt-research.json](../data/simulation/brt-research.json)。證據包含規劃標準、研究綜述、乘客調查摘要與機構發布，不是針對內湖的因果研究。WRI 所引原始論文尚未逐篇獨立核對；未宣稱已完成同行評審論文的系統性回顧。完整 PDF 只留在本機研究快取，不重複提交 GitHub；引用紀錄包含原文 URL、頁碼、bytes 與 SHA-256。
 
-- [BRT 定義](https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/02-why-brt/01-defining-rapid-transit-modes.manu)：實體隔離車道、中央線位、站外收費、平面上下車、路口轉向管理及公車優先。引用章節採 2015 標準，不能宣稱本案通過較新標準的認證。
+- [BRT 定義](https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/02-why-brt/01-defining-rapid-transit-modes.manu)：實體隔離車道、中央線位、站外收費、平面上下車、路口轉向管理及公車優先。此指南章節引用舊版標準；現另查核 [2024 原文](https://itdp.org/wp-content/uploads/2024/03/ITDP_BRTSTANDARD_APR2024_SINGLE-compressed.pdf#page=36)印刷第 33 頁（PDF 第 36 頁）：最低 BRT 資格為至少 3 公里專用道走廊，專用路權與線位各至少 4 分，五項核心合計至少 20 分。這不是金級認證；本模擬也沒有做實際走廊評分。印刷第 45 頁另指出路口轉向限制往往比單純優先號誌更有效；不能只設公車道、忽略橫向衝突。
 - [運輸表現](https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/02-why-brt/04-performance.manu)：歷史觀測尖峰單向載客量，曼谷約 1,200、廣州約 27,400 人／時／方向。廣州站區有超車能力。這些不是現況、容量上限或道路減塞率，不能移植到只有單停靠位、無超車站的走廊。指南亦提醒站點占用超過約 40% 可能產生公車排隊，模型超過時顯示警示。
 - [一般交通影響](https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/08-traffic-impact-assessment/00-index.manu)：廣州崗頂案例描述一般車流與公車同時改善，但該段沒有可套用的減塞百分比。必須檢查 BRT 對一般交通的影響及一般交通回堵到 BRT 的影響。
 - [交通量推估](https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/08-traffic-impact-assessment/05-estimating-traffic-volumes.manu)：把既有公車移出混流、保留仍混流的班次，估計轉乘、轉向與改道。轉乘率宜另做偏好／行為調查，不能把想改善的百分比反填成預測。
 
-WRI《Social, Environmental and Economic Impacts of Bus Rapid Transit》原文網域在本環境回傳 403，未讀到原文，未引用其中任何效果數字。泰國系統的名稱也不等於完整 BRT 的充分證據。
+### 已核對的效果數字與指標
+
+[WRI 官方報告入口](https://www.wri.org/research/social-environmental-and-economic-impacts-bus-rapid-transit)目前重新導向 [PDF](https://environmentaldocuments.com/embarq/Social-Environmental-Economic-Impacts-BRT-Bus-Rapid-Transit-EMBARQ.pdf)。此次已成功讀取，書名為 *Social, Environmental and Economic Impacts of BRT Systems*（Carrigan、King、Velasquez、Raifman、Duduta，2013）。下列 WRI 數字位於印刷第 34 頁／PDF 第 36 頁；是該報告對其他研究的綜述，並非此次直接分析原始資料。
+
+| 系統／來源 | 報告效果 | 對象、時間與限制 |
+| --- | --- | --- |
+| 約翰尼斯堡 Rea Vaya；WRI 2013 引 Venter & Vaz 2011 | 每單程省 13 分鐘，約 10–20% | 乘客調查，與原方式到同一目的地相比；不是一般道路或全市壅塞率。 |
+| 伊斯坦堡 Metrobüs；WRI 2013 引 Alpkokin & Ergun 2012 | 典型乘客每日省 52 分鐘 | 單位是「每日」，不能轉述成單程；該數字不能替內湖設定旅行時間。 |
+| 里約 TransCarioca；[ITDP 2015-05-11](https://itdp.org/2015/05/11/itdp-brazil-survey-finds-transcarioca-brt-reduces-travel-times-cuts-costs/) | 受訪乘客平均旅行時間減少 35%；原開車者平均省時 10% | 2014 年 12 月調查 1,005 名乘客，原開車者僅占受訪者 4%。這個分母不是全體駕駛，也不是車流減少率。摘要亦稱超過 26% 乘客候車超過 10 分鐘，不能只引用平均省時。 |
+| 廣州 BRT；[ITDP 2011-08-17](https://itdp.org/2011/08/17/guangzhou-brt-reduces-co2-emissions-by-86000-tonnes-annually/) | 原文稱走廊一般車輛旅行時間改善 20%，公車乘客改善 29% | 為機構發布；所連底層排放／影響報告目前 404，未獨立重現量測、分母與反事實。可作研究線索，不能直接當成可靠的內湖預測或因果係數。 |
+
+**來源品質：**WRI 印刷第 34 頁的廣州段落把 13.9 → 7.8 km/h 寫成車速「增加」，另把 14 → 23 km/h 寫成增加 84%，數字與敘述／算術不一致。已將該 PDF 頁面轉圖目視核對，排除文字抽取問題。這組車速、增幅不納入案例指標或模型，也不自行猜測正確數字。ITDP 2011 的 20%／29% 是另有直接出處的發布說法，並不因此變成已驗證的底層測量。
+
+**對內湖的含義：**有乘客省時證據，也有一般車輛改善的個案說法；仍不足以給出可移植的減塞百分比。WRI 同頁明確提到 BRT 施工及一般車道改專用道可能延誤混流車輛，而整併原本在路側爭道停靠的公車可能改善混流。內湖的路網、既有公車運作、施工與轉乘條件必須各自校正。這次僅補研究依據，不將外國百分比乘進模型，也不改動原有情境假設。
+
+**待追溯原始研究：**WRI 引用 Alpkokin, P. & Ergun, M. (2012), *Istanbul Metrobüs: first intercontinental bus rapid transit*, 24:58–66；Venter, C. & Vaz, E. (2011), *The effectiveness of Bus Rapid Transit as part of a poverty reduction strategy: Some early impacts in Johannesburg*。目前對這兩篇僅核對 WRI 的引文與轉述，尚未把它們標為已讀原文。泰國系統名稱也不等於完整 BRT 的充分證據。
 
 ## 模型與參數
 
