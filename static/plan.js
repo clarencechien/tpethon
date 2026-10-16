@@ -13,7 +13,8 @@ async function readWeek(entry){
 async function read(url){const r=await fetch(url);if(!r.ok)throw Error('資料讀取失敗（HTTP '+r.status+'）');return r.json();}
 function renderWeeks(){
  if(!manifest)return;const period=$('week-period').value;
- $('weekly-period').textContent=`截至 ${manifest.as_of} · 上週是完整週期，本週只計已發布歷史；最新排程快照不混入週摘要。`;
+ const updated=manifest.generated_at?new Date(manifest.generated_at).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false}):'尚未記錄';
+ $('weekly-period').textContent=`摘要更新：${updated}（台北） · 歷史資料到 ${manifest.latest_available_day||'尚無完整日期'} · 以 ${manifest.as_of} 劃分上週／本週；只計已發布歷史。預定每日 11:23、23:23 更新，Actions 可能延遲；歷史通常隔日上午發布，最新即時快照不混入週摘要。`;
  $('week-cards').replaceChildren();
  for(const [i,w] of weeks.entries()){
   const box=n('article','');box.className='week-card';box.append(n('b',(i===0?'上週':'本週')+' · '+w.start+' – '+w.end),n('strong',w.available_days+' / 7 天'),n('p',w.complete?'七個日曆日皆已取得；每日仍可能有觀測缺漏。':'部分週：未發布、未來或下載缺漏日期不補零。'));$('week-cards').append(box);

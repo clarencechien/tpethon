@@ -124,4 +124,23 @@ python scripts/prepare_simulation.py
 python scripts/build_pages.py --history
 ```
 
-新增的逐日檔與原始下載只保存於忽略的 `local-data/`，GitHub 新增週摘要及小型參考資料；先前10/15回放繼續保留。Actions目前部署已提交摘要，不會自動向TDX回補。
+新增的逐日檔與原始下載只保存於忽略的 `local-data/`，GitHub 新增週摘要及小型參考資料；先前10/15回放繼續保留。週摘要另由下述排程更新。
+
+
+### 每日兩次更新上週／本週
+
+[Refresh weekly traffic summaries](https://github.com/clarencechien/tpethon/actions/workflows/weekly-data.yml) 預定於台北時間 **11:23、23:23** 執行（UTC cron `23 3,15 * * *`），避開整點；GitHub 排程仍可能延遲或漏跑，不保證準時。也可手動 Run workflow。公開儀表板的即時採集仍維持每小時第 7、22、37、52 分。
+
+在 [Repository Actions secrets](https://github.com/clarencechien/tpethon/settings/secrets/actions) 或 `github-pages` environment 設定 `TDX_CLIENT_ID`、`TDX_CLIENT_SECRET`（也接受 `TDXID`、`TDXSEC`）。Codex 的 `tdxid`／`tdxsec` 不會自動傳給 Actions；缺少 secrets 時流程會明確失敗，不覆寫舊摘要。此流程不使用 MQTT。
+
+流程以台北日期計算上週一至昨天，依序回補 TDX、取得所需年份行事曆、通過完整性檢查，再提交 `data/weeks/` 的兩週摘要。週一的本週尚無完整歷史日，會正常顯示 0 天。TDX 歷史通常每天 08:00 更新至昨天；晚間執行主要補抓延遲／失敗資料，並非當天下班的完整歷史。頁面顯示摘要產生時間與最新觀測日期，依實際成功結果判讀新鮮度。
+
+Actions cache 僅留兩週所需的小型逐日檔，原始全市下載不進 cache 或 Git；快取失效可重新回補，首次約需下載 7–13 天、數十分鐘。更新成功後透過 `workflow_run` 觸發 Pages，避免 bot commit 不觸發 push 工作流程的限制；失敗不發布新摘要。需允許 workflow 的 `contents: write` 權限，若 main 有保護規則，也須允許這類資料提交。
+
+本機可用相同流程：
+
+```sh
+python scripts/refresh_weeks.py
+```
+
+週摘要保留在 Git 歷史中，工作目錄只保留上週與本週；這不是一年期原始交通資料庫。長期研究仍需另存每日觀測及天氣、事件資料。

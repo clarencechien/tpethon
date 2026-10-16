@@ -159,7 +159,11 @@
       "weather_adjusted": false
     }
   },
-  "calendar_source": "https://raw.githubusercontent.com/ruyut/TaiwanCalendar/master/data/2026.json",
+  "latest_available_day": "2026-10-15",
+  "calendar_sources": [
+    "https://raw.githubusercontent.com/ruyut/TaiwanCalendar/master/data/2026.json"
+  ],
   "calendar_verified_official": false,
-  "calendar_sha256": "8adf83e52269a338cabf0ea529ca0ef3047ddd963f2c8b29004776f12fd470b5"
+  "calendar_sha256": "39fa973c8650060f028699745850cb27d43d225837d3e796cf71f022df929a47",
+  "generated_at": "2026-10-16T11:59:08+08:00"
 }

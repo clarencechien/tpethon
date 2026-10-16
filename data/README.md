@@ -41,6 +41,6 @@ node --test tests/*.test.mjs
 
 TDX 歷史查詢排除當天，官方文件標示每天 08:00 更新至昨天。程式核對來源 Meta 筆數以避免 `$top` 截斷；保留原始快取，成功下載不重抓。文件：[TDX 歷史路況 OAS](https://tdx.transportdata.tw/webapi/File/Swagger/V3/4b4708cc-ab49-4037-a896-e24544d51609)。來源為交通部 TDX／臺北市交通管制工程處，使用須遵守 [TDX 使用條款](https://tdx.transportdata.tw/term)及來源資料授權。
 
-本次回補由 Codex 環境執行，再提交不含憑證的 JSON。**目前 GitHub Actions 只部署已提交歷史，未設定每天自動向 TDX 回補**；Codex 環境變數不會自動傳入 Actions。MQTT 是另一路即時串流，不是此次歷史檔的來源。
+初次回補由 Codex 環境執行。`weekly-data.yml` 現已設定台北時間每日 11:23、23:23 自動回補並提交兩週摘要，需另在 Actions 設定 `TDX_CLIENT_ID`／`TDX_CLIENT_SECRET`；Codex 環境變數不會自動傳入。逐日 compact 檔只放 Actions cache，原始下載不進 Git。失敗保留舊摘要，成功後觸發 Pages。MQTT 是另一路即時串流，不是此次歷史檔的來源。設定與資料時效見 [README](../README.md#每日兩次更新上週本週)。
 
 每日檔不覆寫、總量達 100 MB 或單日超過 5 MB 時停止新增，改評估物件儲存或發布資產；不要把大型檔先提交後刪除，Git 歷史仍會保存。按本次大小外推一年約 216 MB JSON，實際以每天測站與資料量為準。GitHub 儲存的是公開設備彙整，沒有公車車牌、乘客紀錄或任何金鑰。

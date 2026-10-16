@@ -1,0 +1,65 @@
+name: Refresh weekly traffic summaries
+
+on:
+  schedule:
+    # GitHub cron uses UTC: 03:23 / 15:23 = Taipei 11:23 / 23:23.
+    - cron: '23 3,15 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-traffic-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check TDX credentials
+        env:
+          TDX_CLIENT_ID: ${{ secrets.TDX_CLIENT_ID || secrets.TDXID }}
+          TDX_CLIENT_SECRET: ${{ secrets.TDX_CLIENT_SECRET || secrets.TDXSEC }}
+        run: |
+          if [ -z "$TDX_CLIENT_ID" ] || [ -z "$TDX_CLIENT_SECRET" ]; then
+            echo '::error::Add TDX_CLIENT_ID and TDX_CLIENT_SECRET to repository secrets or the github-pages environment. Codex variables are not inherited by Actions.'
+            exit 1
+          fi
+      - name: Restore compact daily archives
+        uses: actions/cache/restore@v4
+        with:
+          path: local-data/weekly-history
+          key: weekly-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: weekly-v1-
+      - name: Validate aggregation
+        run: python -m unittest discover -s tests -v
+      - name: Fetch completed days and build rolling weeks
+        id: refresh
+        env:
+          TDX_CLIENT_ID: ${{ secrets.TDX_CLIENT_ID || secrets.TDXID }}
+          TDX_CLIENT_SECRET: ${{ secrets.TDX_CLIENT_SECRET || secrets.TDXSEC }}
+        run: python scripts/refresh_weeks.py
+      - name: Retain completed downloads even if a later day fails
+        if: ${{ always() && (steps.refresh.outcome == 'success' || steps.refresh.outcome == 'failure') }}
+        uses: actions/cache/save@v4
+        with:
+          path: local-data/weekly-history
+          key: weekly-v1-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Commit only the two weekly summaries
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- data/weeks
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'data: refresh previous and current Taipei traffic weeks'
+          git pull --rebase origin main
+          git push origin HEAD:main

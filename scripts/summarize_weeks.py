@@ -71,8 +71,15 @@ def comparison(previous,current,archives):
 
 def build(as_of,input_dir,output,calendar_path=None):
     monday=as_of-timedelta(days=as_of.weekday());starts=[monday-timedelta(days=7),monday]
-    archives={};calendar={}
-    if calendar_path and calendar_path.exists():calendar={r['date']:r for r in json.loads(calendar_path.read_text())}
+    archives={};calendar={};calendar_sources=[]
+    if calendar_path and calendar_path.exists():
+        reference=json.loads(calendar_path.read_text())
+        if isinstance(reference,dict):
+            calendar_sources=reference['sources'];reference=reference['days']
+        else:
+            years=sorted({r['date'][:4] for r in reference})
+            calendar_sources=[f'https://raw.githubusercontent.com/ruyut/TaiwanCalendar/master/data/{year}.json' for year in years]
+        calendar={r['date']:r for r in reference}
     weeks=[]
     for start in starts:
         days=[];source_files=[]
@@ -111,7 +118,7 @@ def build(as_of,input_dir,output,calendar_path=None):
         filename=week['start']+'.json';data=json.dumps(week,ensure_ascii=False,separators=(',',':'),allow_nan=False).encode();(output/filename).write_bytes(data)
         files.append(dict(file=filename,start=week['start'],end=week['end'],available_days=week['available_days'],complete=week['complete'],bytes=len(data),sha256=hashlib.sha256(data).hexdigest()))
     index=dict(schema_version=1,as_of=as_of.isoformat(),timezone='Asia/Taipei',weeks=files,matched_weekdays=matched,
-               calendar_source='https://raw.githubusercontent.com/ruyut/TaiwanCalendar/master/data/2026.json' if calendar else None,
+               latest_available_day=max(archives,default=None),calendar_sources=calendar_sources,
                calendar_verified_official=False,calendar_sha256=hashlib.sha256(calendar_path.read_bytes()).hexdigest() if calendar else None)
     (output/'index.json').write_text(json.dumps(index,ensure_ascii=False,indent=2,allow_nan=False)+'\n')
     return index

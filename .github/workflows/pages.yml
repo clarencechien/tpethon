@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # GITHUB_TOKEN commits do not trigger push workflows; deploy after refresh.
+  workflow_run:
+    workflows: [Refresh weekly traffic summaries]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: '7,22,37,52 * * * *'
 
@@ -18,6 +23,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
@@ -25,6 +31,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

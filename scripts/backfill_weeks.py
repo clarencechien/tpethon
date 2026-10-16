@@ -18,16 +18,22 @@ def main():
     monday=args.as_of-timedelta(days=args.as_of.weekday())
     begin=monday-timedelta(days=7);end=args.as_of-timedelta(days=1)
     output=ROOT/'local-data'/'weekly-history';output.mkdir(parents=True,exist_ok=True)
-    bearer=None;results=[]
+    bearer=None;token_time=0;results=[]
     for n in range((end-begin).days+1):
         day=(begin+timedelta(days=n)).isoformat()
         if (output/(day+'.json')).exists():
+            cached=json.loads((output/(day+'.json')).read_bytes())
+            if cached.get('day')!=day or not cached.get('frames') or not cached.get('sources'):
+                raise ValueError('Invalid cached archive: '+day)
             print(day,'cached',flush=True);results.append({'day':day,'status':'cached'});continue
         try:
             # Reuse the token and allow only one historical download at a time.
-            bearer=bearer or token()
+            if not bearer or time.monotonic()-token_time>600:
+                bearer=token();token_time=time.monotonic()
             result=backfill(day,ROOT/'local-data'/'weekly-staging'/day,bearer)
-            (output/(day+'.json')).write_bytes((ROOT/'local-data'/'weekly-staging'/day/(day+'.json')).read_bytes())
+            temporary=output/(day+'.part')
+            temporary.write_bytes((ROOT/'local-data'/'weekly-staging'/day/(day+'.json')).read_bytes())
+            temporary.replace(output/(day+'.json'))
             results.append({'day':day,'status':'ok','bytes':result['bytes']})
             print(json.dumps(results[-1]),flush=True)
         except Exception as exc:
