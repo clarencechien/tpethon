@@ -16,7 +16,7 @@
       "available_days": 7,
       "complete": true,
       "bytes": 452633,
-      "sha256": "e1229b5abe0b66f6c8fffb6be32fbb02ac4a9128df321a1103dd375f2cf9ddb2"
+      "sha256": "c6ff5e12d3c35312c94208a337cf914ee0dd4099e4fd22c4a9f63b24e78fc7d7"
     },
     {
       "file": "2026-10-12.json",
@@ -25,7 +25,7 @@
       "available_days": 4,
       "complete": false,
       "bytes": 260541,
-      "sha256": "a05f2f4c24e15617f165e178bb8f5348b25cbcc4105ec54d21b2185b80b88638"
+      "sha256": "b7c2edca07ba6d344e3ddf24fab5b6d58f3947a6a81fc9be108a973bb2d1d26a"
     }
   ],
   "matched_weekdays": {
@@ -171,5 +171,5 @@
   ],
   "calendar_verified_official": false,
   "calendar_sha256": "39fa973c8650060f028699745850cb27d43d225837d3e796cf71f022df929a47",
-  "generated_at": "2026-10-16T11:59:08+08:00"
+  "generated_at": "2026-10-16T13:43:18+08:00"
 }
