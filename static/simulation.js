@@ -1,11 +1,13 @@
 import {defaults,experiment,runScenario,modelVersion} from './simulation_logic.js';
+import {projectInputs,profileWeights} from './growth_logic.js';
+import {initGrowth,readGrowth,renderGrowth,clearGrowth} from './growth.js';
 const $=id=>document.getElementById(id);
 const node=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;return e;};
 const fmt=(value,digits=0)=>value.toLocaleString('zh-TW',{maximumFractionDigits:digits});
 const fields=[
- ['people','本批原搭私車人次',0,100000,100,'basic'],
+ ['people','基期原搭私車人次（假設）',0,100000,100,'basic'],
  ['occupancy','私車平均乘員（人）',1,10,.1,'basic'],
- ['peakMinutes','07:00 起尖峰長度（分）',30,240,15,'basic'],
+ ['peakMinutes','基期尖峰長度（分）',30,240,15,'basic'],
  ['innerShare','原走主要通道（%）',0,100,5,'basic',100],
  ['innerCapacity','主要通過能力（PCU／時）',50,15000,50,'basic'],
  ['outerCapacity','外圍通過能力（PCU／時）',50,15000,50,'basic'],
@@ -25,8 +27,8 @@ for(const [id,label,min,max,step,group,scale=1] of fields){
  Object.assign(input,{type:'number',id:'sim-'+id,min,max,step,value:defaults[id]*scale,required:true});
  el.append(input);$(group+'-inputs').append(el);
 }
-let inputs={...defaults},results=[],selected='restrict',sensitivity=[],timer;
-const clock=minute=>{const total=360+minute;return `${String(Math.floor(total/60)%24).padStart(2,'0')}:${String(total%60).padStart(2,'0')}${total>=1440?'（次日）':''}`;};
+let inputs={...defaults},baseInputs={...defaults},growthSettings,growthReport,clockOffset=360,results=[],selected='restrict',sensitivity=[],timer;
+const clock=minute=>{const total=clockOffset+minute;return `${String(Math.floor(total/60)%24).padStart(2,'0')}:${String(total%60).padStart(2,'0')}${total>=1440?'（次日）':''}`;};
 const current=()=>results.find(r=>r.id===selected)||results[0];
 function change(value,base){return base>1e-8?`${value>base?'+':''}${fmt((value/base-1)*100,1)}%`:`參考為 0；${fmt(value,1)}`;}
 function bounded(value,r){return (r.residualPCU>1e-7?'≥':'')+fmt(value,1);}
@@ -37,7 +39,7 @@ function renderTable(){
   for(const value of [r.label,fmt(r.carTrips),fmt(r.busDepartures),fmt(r.totalFleet),fmt(r.maxInnerQueue)+' PCU',fmt(r.maxOuterQueue)+' PCU',bounded(r.queuePCUHours,r),bounded(r.totalPCUHours,r)])row.append(node('td',value));
   $('simulation-results').append(row);
  }
- $('simulation-summary').textContent=`同一批 ${fmt(inputs.people)} 人 · 人工需求曲線 ${clock(60)}–${clock(60+inputs.peakMinutes)}。所有情境保留總人次；表中的參考情境也是假設，不是實測現況。`;
+ $('simulation-summary').textContent=`基期後 ${growthSettings.years} 年 · 同一批 ${fmt(inputs.people)} 假設人次 · ${inputs.demandWeights?'實測相對型態':'人工需求曲線'} ${clock(60)}–${clock(60+inputs.peakMinutes)}。所有情境保留總人次；參考情境未經現況校正。`;
 }
 function renderChart(){
  const r=current(),base=results[0],duration=Math.max(r.series.length,base.series.length);
@@ -84,18 +86,23 @@ function renderComparison(){
     s.baseline.residualPCU+s.selected.residualPCU>1e-7?'未排空，暫不比較':change(s.selected.totalPCUHours,s.baseline.totalPCUHours)];
   for(const value of values)tr.append(node('td',value));$('simulation-sensitivity').append(tr);
  }
+ growthReport=renderGrowth(baseInputs,growthSettings,r.policy);
 }
 function render(){renderTable();renderChart();renderComparison();}
 function run(){
  clearTimeout(timer);
  try{
+  const settings=readGrowth();
+  if(settings.profile)$('sim-peakMinutes').value=150;
   const next={};
   for(const [id,,,,,,scale=1] of fields){const el=$('sim-'+id);if(!el.value||!el.checkValidity())throw Error('請填入所有欄位允許範圍內的數字。');next[id]=Number(el.value)/scale;}
-  const nextResults=experiment(next);inputs=next;results=nextResults;
+  if(settings.profile){next.demandWeights=profileWeights(settings.profile);next.demandSource={id:settings.profile.id,days:settings.profile.days,start_minute:settings.profile.start_minute,kind:'observed_sample_shape_not_total_demand'};}
+  const projected=projectInputs(next,settings),nextResults=experiment(projected);
+  baseInputs=next;growthSettings=settings;inputs=projected;results=nextResults;clockOffset=settings.profile?settings.profile.start_minute-60:360;
   $('simulation-error').hidden=true;$('download-simulation').disabled=false;$('simulation-choice').disabled=false;$('simulation-minute').disabled=false;
   render();
  }catch(e){
-  results=[];$('simulation-error').hidden=false;$('simulation-error').textContent=e.message;
+  results=[];growthReport=null;clearGrowth();$('simulation-error').hidden=false;$('simulation-error').textContent=e.message;
   for(const id of ['simulation-results','simulation-chart','simulation-sensitivity'])$(id).replaceChildren();
   $('simulation-summary').textContent='輸入無效；已清除上一組結果。';$('simulation-diagnosis').textContent='修正輸入後重新計算。';
   for(const id of ['inner','outer']){$('channel-'+id).style.background='#eef1ef';$('channel-'+id).querySelector('strong').textContent='—';$('channel-'+id).querySelector('small').textContent='沒有有效結果';}
@@ -108,14 +115,15 @@ $('simulation-choice').onchange=()=>{selected=$('simulation-choice').value;rende
 $('simulation-minute').oninput=replay;
 $('simulation-form').onsubmit=e=>e.preventDefault();
 $('simulation-form').oninput=()=>{clearTimeout(timer);timer=setTimeout(run,150);};
-$('reset-simulation').onclick=()=>{for(const [id,,,,,,scale=1] of fields)$('sim-'+id).value=defaults[id]*scale;run();};
+$('reset-simulation').onclick=()=>{for(const [id,,,,,,scale=1] of fields)$('sim-'+id).value=defaults[id]*scale;$('growth-mode').value='synthetic';$('growth-years').value=0;$('growth-rate').value=2;$('growth-capacity').value=0;$('growth-metro-rate').value=2;run();};
 $('download-simulation').onclick=()=>{
- const report={schema_version:1,model_version:modelVersion,calibrated:false,input_type:'assumptions_not_measured_demand',generated_at:new Date().toISOString(),
-  inputs,selected,units:{queue:'PCU',time_total:'PCU hours',timeline:'minutes after 06:00, illustrative morning'},
+ const report={schema_version:2,model_version:modelVersion,calibrated:false,input_type:inputs.demandWeights?'observed_shape_with_assumed_magnitude_and_growth':'assumptions_not_measured_demand',generated_at:new Date().toISOString(),
+  base_inputs:baseInputs,growth:growthReport,inputs,selected,units:{queue:'PCU',time_total:'PCU hours',timeline:`minutes after ${clock(0)}`},
   limitations:['Two abstract point queues; no spillback, signals, or route choice equilibrium','No transit person-time, operating cost, weather calibration or metro spare capacity','Fixed bus cycles; no return-direction traffic or driver scheduling'],results,sensitivity};
  const url=URL.createObjectURL(new Blob([JSON.stringify(report)],{type:'application/json'})),a=node('a','');a.href=url;a.download='neihu-assumption-simulation.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 run();
+initGrowth(run);
 (async()=>{
  try{
   const response=await fetch('./data/weeks/index.json',{cache:'no-cache'});if(!response.ok)throw Error('週索引讀取失敗');

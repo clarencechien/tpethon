@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.backfill_tdx import TZ
 from scripts.summarize_weeks import build
+from scripts.build_profiles import publish as publish_profiles
 
 
 def completed_days(as_of):
@@ -51,10 +52,12 @@ def publish_weeks(as_of, archives, output, calendar):
     with tempfile.TemporaryDirectory(dir=output.parent) as directory:
         staging = Path(directory)
         manifest = build(as_of, archives, staging, calendar)
+        manifest['demand_profiles'] = publish_profiles(archives, staging)
         manifest['generated_at'] = datetime.now(TZ).isoformat(timespec='seconds')
         (staging / 'index.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
         output.mkdir(parents=True, exist_ok=True)
         keep = {entry['file'] for entry in manifest['weeks']}
+        keep.add(manifest['demand_profiles']['file'])
         for filename in sorted(keep) + ['index.json']:
             (staging / filename).replace(output / filename)
         # Only remove dated summary files; leave README or other files intact.

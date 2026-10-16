@@ -77,14 +77,14 @@ def prepare(folder,output):
     write(output/'bus-service-summary.json',dict(schedules=summaries,travel_time=travel,
           note='站間 RunTime 為來源預估行駛時間。班表與站間時間的 SubRouteUID 不同，尚未配對，不能相加為真實往返循環。'))
     weather=json.loads((folder/'weather-sample.json').read_text());near=[r for r in weather if inside(r.get('LonWGS84',r.get('Lon')),r.get('LatWGS84',r.get('Lat')))]
-    status=dict(schema_version=1,as_of='2026-10-16',model_status='capacity_accounting_only',items=[
-      dict(label='道路 VD',status='已取得歷史，週摘要另附',detail='以官方來源時間、方向與有效車道建立基準；沒有將多個 VD 車流加總為入區人數。'),
+    status=dict(schema_version=1,as_of='2026-10-16',model_status='illustrative_queue_with_observed_shapes_and_growth',items=[
+      dict(label='道路 VD',status='已取得歷史，週摘要另附',detail='已提供單一測站方向的完整抽樣型態，可套用年成長情境；原始統計區間尚未確認，不換算尖峰總車流或入區人數。'),
       dict(label='道路線形與路段代碼',status='部分到位',detail=f'{len(features)} 個研究區候選路段，保留端點代碼與 LinkID；缺完整轉向、號誌、車道連接及外圍繞道路網。'),
       dict(label='公車站序與班表',status='部分到位',detail=f'已篩出 {len(candidates)} 個藍26／棕20／紅3／藍7 路線方向變體；藍26、棕20班表與藍26站間預估時間已取得。不同子路線尚不能拼成往返時間。'),
-      dict(label='捷運 OD',status='已有歷史彙整',detail='2026-09 西湖與港墘晨間需求可作接駁參考；不是開車族需求或列車剩餘容量。'),
+      dict(label='捷運 OD',status='已有歷史彙整',detail='2026-09 西湖與港墘晨間既有旅次可獨立做成長推估；不是開車族需求或列車剩餘容量，不加進道路模型。'),
       dict(label='天氣',status='尚未完成',detail=f'TDX 歷史氣象抽樣取得 {len(weather)} 筆，研究範圍內 {len(near)} 筆，不能當作內湖兩週雨量，週摘要標示未知。'),
       dict(label='起終點需求、車輛乘員與轉乘意願',status='待補',detail='需企業通勤調查、匿名聚合旅次或有約束的 OD 估計；Plan 目前人次為可調假設。'),
-      dict(label='號誌、容量、轉向、駕駛休息與折返空間',status='待補',detail='未取得前不發布限行後車速、排隊與通勤時間改善的數字。')])
+      dict(label='號誌、容量、轉向、駕駛休息與折返空間',status='待補',detail='已有實測相對型態與假設成長的雙通道實驗；未校正完整路網，不把模型排隊或政策差異當成內湖實際預測。')])
     write(output/'readiness.json',status)
     write(output/'source-evidence.json',dict(as_of='2026-10-16',sources=evidence,
         route_stops=dict(url='https://tdx.transportdata.tw/api/basic/v2/Bus/StopOfRoute/City/Taipei?%24top=10000&%24format=JSON',selection='routes with any stop inside study bounds',selected_route_variants=len(stops),selected_unique_routes=len(set(r['RouteUID'] for r in stops))),

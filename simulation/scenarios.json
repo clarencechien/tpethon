@@ -116,6 +116,8 @@
     ],
     "demand_and_capacity": "user_assumptions",
     "network_validated": false,
-    "note": "Two abstract channels, fixed diversion, no spillback or equilibrium; not S0 SUMO calibration."
+    "note": "Two abstract channels, fixed diversion, no spillback or equilibrium; not S0 SUMO calibration.",
+    "observed_shapes": "data/weeks/profiles.json",
+    "growth": "annual compound demand/capacity scenarios; rates assumed, not fitted from two weeks"
   }
 }

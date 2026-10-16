@@ -1,10 +1,10 @@
-// Deterministic two-channel fluid point queues. All inputs are assumptions.
+// Two-channel point queues: assumed magnitude/capacity, optional observed sample shape.
 // PCU = passenger-car equivalent; no calibrated Neihu network or OD is implied.
 export const defaults=Object.freeze({people:10000,occupancy:1.3,peakMinutes:150,
  innerShare:.7,innerCapacity:2000,outerCapacity:1400,freeMinutes:12,detourMinutes:8,
  busShare:.2,staggerShare:.2,shiftMinutes:60,restrictShare:.2,
  busSeats:70,busLoad:.8,busPCU:2.5,cycleMinutes:90,reserve:.1});
-export const modelVersion='two-channel-point-queue-v1';
+export const modelVersion='two-channel-point-queue-v2';
 
 export function validate(a){
  const ranges={people:[0,100000],occupancy:[1,10],peakMinutes:[30,240],innerShare:[0,1],
@@ -14,6 +14,7 @@ export function validate(a){
  for(const [key,[lo,hi]] of Object.entries(ranges))if(!Number.isFinite(a[key])||a[key]<lo||a[key]>hi)throw Error(`參數超出範圍：${key}`);
  for(const key of ['people','peakMinutes','shiftMinutes','cycleMinutes','busSeats'])if(!Number.isInteger(a[key]))throw Error(`參數需為整數：${key}`);
  if(Math.floor(a.busSeats*a.busLoad)<1)throw Error('巴士有效容量至少需 1 人');
+ if(a.demandWeights!==undefined&&(!Array.isArray(a.demandWeights)||a.demandWeights.length!==a.peakMinutes||a.demandWeights.some(v=>!Number.isFinite(v)||v<0)||a.demandWeights.reduce((s,v)=>s+v,0)<=0))throw Error('需求型態必須完整、非負且符合尖峰長度');
 }
 
 // Constant arrival/service rates within one minute; integrate queue exactly,
@@ -39,7 +40,7 @@ export function runScenario(input,policy={bus:0,stagger:0,restrict:0}){
  const passengers=Math.round(a.people*policy.bus),carPeople=a.people-passengers;
  const cars=carPeople/a.occupancy,divertedCars=cars*a.innerShare*policy.restrict;
  const effectiveSeats=Math.floor(a.busSeats*a.busLoad);
- const weights=Array.from({length:a.peakMinutes},(_,i)=>.55+.9*Math.sin(Math.PI*(i+.5)/a.peakMinutes));
+ const weights=a.demandWeights||Array.from({length:a.peakMinutes},(_,i)=>.55+.9*Math.sin(Math.PI*(i+.5)/a.peakMinutes));
  const weightTotal=weights.reduce((x,y)=>x+y,0);
  let waitingPassengers=0,departures=0;
  for(let i=0;i<weights.length;i++){
@@ -72,7 +73,7 @@ export function runScenario(input,policy={bus:0,stagger:0,restrict:0}){
  const totalPCU=demandInner+demandOuter,queuePCUHours=(areaI+areaO)/60;
  const lastBusy=series.findLast(row=>row.innerQueue+row.outerQueue>1e-7)?.minute;
  const operatingFleet=windowMaximum(buses,a.cycleMinutes),reserveFleet=Math.ceil(operatingFleet*a.reserve);
- return {modelVersion,calibrated:false,policy,people:a.people,carPeople,busPassengers:passengers,
+ return {modelVersion,calibrated:false,demandProfileKind:a.demandWeights?'observed_sample_shape':'synthetic',policy,people:a.people,carPeople,busPassengers:passengers,
   carTrips:cars,divertedCars,shiftedCarTrips:cars*policy.stagger,busDepartures:departures,
   effectiveSeats,operatingFleet,reserveFleet,totalFleet:operatingFleet+reserveFleet,
   busiestHourDepartures:windowMaximum(buses,60),busPassengersUnserved:waitingPassengers,

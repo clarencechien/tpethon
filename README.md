@@ -150,9 +150,12 @@ python scripts/refresh_weeks.py
 
 [開啟情境模擬](https://clarencechien.github.io/tpethon/simulation.html)：雙通道逐分鐘排隊模型，測試改搭巴士、延後出發、限行改道、組合方案與本批人次全改巴士。可調整假設、回放隊列、比較外圍壅塞和容量±20%敏感度，下載包含輸入及完整時間序列的 JSON。無需 TDX 金鑰即可執行。
 
-需求、容量、循環時間均為明示假設；實測週摘要僅列查證候選，尚未用來校正模型。結果不是內湖街道預測，也不是乘客福利或最佳政策結論。[方法與第一輪結果](docs/SIMULATION_PLAN.md#三之一已執行的-m0b雙通道排隊情境實驗)。
+總需求、容量、循環時間均為明示假設；現可選單一VD的實測相對型態，仍未校正路網。結果不是內湖街道預測，也不是乘客福利或最佳政策結論。[方法與第一輪結果](docs/SIMULATION_PLAN.md#三之一已執行的-m0b雙通道排隊情境實驗)。
 
 ```sh
 node scripts/run_simulation.mjs  # 重現並寫入 data/simulation/experiment.json
 node --test tests/simulation_logic.test.mjs
 ```
+
+
+實測與成長模式已加入同一模擬頁面：選擇單一測站方向、上班／下班型態，調整道路需求年成長、容量年成長、推估年數與獨立捷運旅次成長。圖表及六種政策情境同步更新；基期人次不會被目標年數字覆寫。捷運實測基期為2026-09，VD型態隨兩週摘要更新。年成長率是使用者假設，不是兩週實測估計值；VD統計區間未確認，僅帶入相對型態，未推算尖峰車流總量。[資料方法與限制](docs/SIMULATION_PLAN.md#三之二實測型態與年成長已接入)。

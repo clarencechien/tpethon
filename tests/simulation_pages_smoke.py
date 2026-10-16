@@ -11,6 +11,7 @@ with sync_playwright() as p:
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto(URL)
     page.wait_for_function("document.querySelectorAll('#simulation-results tr').length===6")
+    page.locator('#reset-simulation').click()
     assert page.locator('#simulation-results tr').nth(1).locator('td').nth(3).inner_text() == '29'
     assert '移往外圍' in page.locator('#simulation-diagnosis').inner_text()
     assert page.locator('#simulation-sensitivity tr').count() == 3
@@ -45,6 +46,8 @@ with sync_playwright() as p:
     missing.route('**/data/weeks/index.json', lambda route: route.fulfill(status=503, body='unavailable'))
     missing.goto(URL)
     missing.wait_for_function("document.querySelector('#evidence').textContent.includes('實測參考暫不可用')")
-    assert missing.locator('#simulation-results tr').count() == 6
+    assert missing.locator('#simulation-results tr').count() == 0
+    missing.locator('#growth-mode').select_option('synthetic')
+    missing.wait_for_function("document.querySelectorAll('#simulation-results tr').length===6")
     print('PASS: simulation scenarios, playback, assumptions export, invalid and zero input, mobile layout, and missing actual data.')
     browser.close()
