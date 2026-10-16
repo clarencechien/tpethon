@@ -1,0 +1,410 @@
+{
+  "checked_at": "2026-10-16T08:55:51.839292+00:00",
+  "scope": "Source availability audit; no annual completeness claim or integration into dashboard traffic data.",
+  "probes": [
+    {
+      "id": "osm-pilot",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=121.572,25.072,121.578,25.076",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "id": "weather-archive",
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude=25.08&longitude=121.57&start_date=2026-10-05&end_date=2026-10-10&hourly=temperature_2m%2Cprecipitation&timezone=Asia%2FTaipei",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "id": "codis",
+      "url": "https://codis.cwa.gov.tw/StationData",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "id": "freeway-vd",
+      "url": "https://tisvcloud.freeway.gov.tw/history/motc20/VD/20261016/",
+      "final_url": "https://tisvcloud.freeway.gov.tw/history/motc20/VD/20261016/",
+      "status": 200,
+      "bytes": 317201,
+      "sha256": "467ff62ce1620c0a2d791642cad9818024f57b18c43b822ea770e2ebc2af3b49",
+      "content_type": "text/html;charset=UTF-8"
+    },
+    {
+      "id": "freeway-etc",
+      "url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M03A/20261015/07/",
+      "final_url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M03A/20261015/07/",
+      "status": 200,
+      "bytes": 14294,
+      "sha256": "2358e73f4791f0d7a8dfda56b0745f8e9f393d4b1bcda8ed8d0c5bcf1a1cc2c9",
+      "content_type": "text/html;charset=UTF-8"
+    },
+    {
+      "id": "taipei-signals-search",
+      "url": "https://www.google.com/search?q=%E8%87%BA%E5%8C%97%E5%B8%82+%E8%99%9F%E8%AA%8C+%E6%99%82%E5%88%B6+%E8%A8%88%E7%95%AB+%E9%96%8B%E6%94%BE%E8%B3%87%E6%96%99+API",
+      "final_url": "https://www.google.com/search?q=%E8%87%BA%E5%8C%97%E5%B8%82+%E8%99%9F%E8%AA%8C+%E6%99%82%E5%88%B6+%E8%A8%88%E7%95%AB+%E9%96%8B%E6%94%BE%E8%B3%87%E6%96%99+API",
+      "status": 200,
+      "bytes": 92873,
+      "sha256": "85c67e49bf35373baabb0c21a7088c699e6e90658e9364421d8e844dc69c75f2",
+      "content_type": "text/html; charset=UTF-8"
+    },
+    {
+      "id": "taipei-rain-search",
+      "url": "https://www.google.com/search?q=%E8%87%BA%E5%8C%97%E5%B8%82+%E9%9B%A8%E9%87%8F+API+heopublic+getlatest",
+      "final_url": "https://www.google.com/search?q=%E8%87%BA%E5%8C%97%E5%B8%82+%E9%9B%A8%E9%87%8F+API+heopublic+getlatest",
+      "status": 200,
+      "bytes": 92846,
+      "sha256": "3daa7ab6990e346708b13a39d89c4821c81f3bc66eefddffef590c6f1f225a49",
+      "content_type": "text/html; charset=UTF-8"
+    },
+    {
+      "id": "oneway-research-search",
+      "url": "https://api.crossref.org/works?query.title=one+way+two+way+street+network+traffic+capacity&rows=3&select=DOI%2Ctitle%2Cauthor%2Cpublished%2Cabstract%2CURL",
+      "final_url": "https://api.crossref.org/works?query.title=one+way+two+way+street+network+traffic+capacity&rows=3&select=DOI%2Ctitle%2Cauthor%2Cpublished%2Cabstract%2CURL",
+      "status": 200,
+      "bytes": 4594,
+      "sha256": "6d706b96040ba44f7c571e71b137c9475cc0db99fff113e2ebf5a54fdb8e1789",
+      "content_type": "application/json"
+    },
+    {
+      "id": "vd-0800.xml.gz",
+      "url": "https://tisvcloud.freeway.gov.tw/history/motc20/VD/20261016/VDLive_0800.xml.gz",
+      "status": 200,
+      "bytes": 167344,
+      "sha256": "86d4931413822cd8c805843e0f12ac280aa8963223591d26ff9536be5cc1e22f"
+    },
+    {
+      "id": "etc-0700.csv",
+      "url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M03A/20261015/07/TDCS_M03A_20261015_070000.csv",
+      "status": 200,
+      "bytes": 57266,
+      "sha256": "897a51e7354476d38523d7e39e5d93d85ace4493604ed1e34a227f5b72b23d0a"
+    },
+    {
+      "id": "mfd.json",
+      "url": "https://api.crossref.org/works/10.1016/j.trb.2008.02.002",
+      "status": 200,
+      "bytes": 6117,
+      "sha256": "b13b5c23be8514f80415ddd59e11e3c6be3299c4cd060f30a2d3e786a83228f1"
+    },
+    {
+      "id": "sumo-tls.html",
+      "url": "https://sumo.dlr.de/docs/Simulation/Traffic_Lights.html",
+      "status": 200,
+      "bytes": 117922,
+      "sha256": "ca7aefdeade318ec03eedb1cf524f3d720896d705c6a6f9864953c9a0f05ba39"
+    },
+    {
+      "id": "etc-manual.pdf",
+      "url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M03A/20261015/07/documents/TDCS%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8Av41b.pdf",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "id": "etc-manual-v41.pdf",
+      "url": "https://tisvcloud.freeway.gov.tw/documents/TDCS%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8Av41b.pdf",
+      "status": 200,
+      "bytes": 575237,
+      "sha256": "357e0b317cb99eac367ba0938318fef0ef979bd491ca6ecfc2865fe5afdf905c"
+    },
+    {
+      "id": "m05a.csv",
+      "url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M05A/20261015/07/TDCS_M05A_20261015_070000.csv",
+      "status": 200,
+      "bytes": 97169,
+      "sha256": "26aa73b160be3ab4937199d4b22a24810bfc4e058c3bf8f45852e4bfc4bada18"
+    },
+    {
+      "id": "vd-lastyear.xml.gz",
+      "url": "https://tisvcloud.freeway.gov.tw/history/motc20/VD/20251016/VDLive_0800.xml.gz",
+      "status": 200,
+      "bytes": 160289,
+      "sha256": "f37c113af823abc32202d401727b27dba8ddbd32b1d54179ca7768b27fedb5d1"
+    },
+    {
+      "id": "stagger.json",
+      "url": "https://api.crossref.org/works?query.title=Rewarding+rush-hour+avoidance+A+study+of+commuters+travel+behavior&rows=1",
+      "status": 200,
+      "bytes": 27179,
+      "sha256": "f1b9c76a41aeaec6a83e22bb72a784fccbdfb192e291ecdde140b8e160dfd132"
+    },
+    {
+      "id": "drt-open.json",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1073/pnas.1611675114&format=json",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "id": "M04A",
+      "url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M04A/20261015/07/TDCS_M04A_20261015_070000.csv",
+      "status": 200,
+      "bytes": 98204,
+      "rows": 2240,
+      "first_row": [
+        "2026/10/15 07:00",
+        "01F0017N",
+        "01F0005N",
+        "31",
+        "45",
+        "29"
+      ],
+      "sha256": "11c59a4fdefda72350f40e4808396577d55ec363cb6c8c38152bfe8b8686840a"
+    },
+    {
+      "id": "M08A",
+      "url": "https://tisvcloud.freeway.gov.tw/history/TDCS/M08A/20261015/07/TDCS_M08A_20261015_070000.csv",
+      "status": 200,
+      "bytes": 229127,
+      "rows": 5725,
+      "first_row": [
+        "2026-10-15 07:00",
+        "03F2129S",
+        "03F3496S",
+        "32",
+        "1"
+      ],
+      "sha256": "35e703884518ea0ee4d9171c0d1c77415855e186385dec5d14eca5404451b6e8"
+    }
+  ],
+  "papers": [
+    {
+      "DOI": "10.3141/2301-09",
+      "title": [
+        "Analytical Capacity Comparison of One-Way and Two-Way Signalized Street Networks"
+      ],
+      "author": [
+        {
+          "given": "Vikash V.",
+          "family": "Gayah",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "416G McLaughlin Hall, Room 1720, University of California, Berkeley, Berkeley, CA 94720-1720"
+            },
+            {
+              "name": "Department of Civil and Environmental Engineering, Pennsylvania State University, 223A Sackett Building, University Park, PA 16802."
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Carlos F.",
+          "family": "Daganzo",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "416G McLaughlin Hall, Room 1720, University of California, Berkeley, Berkeley, CA 94720-1720"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2012,
+            1
+          ]
+        ]
+      },
+      "abstract": "<jats:p>Recently cities have been converting traditional one-way downtown street networks to two-way operation partly because one-way networks are seen as confusing and as less conducive to economic activity and a livable environment and they require vehicles to travel longer distances on average. However, one of the main disadvantages of such conversions is thought to be a reduction in the network's ability to serve vehicles. Intersections in two-way networks can serve fewer vehicles per unit time than their one-way counterparts. Several studies have assessed the differences between these two types of networks, but most studies are site specific and do not consider the best possible two-way networks. This paper presents an analytical model that uses macroscopic analysis techniques to compare various one-way and two-way networks using their trip-serving capacities. This metric is a key indicator of network performance. Two-way networks can serve more trips per unit time than one-way networks when average trip lengths are short. This study also found that two-way networks in which left-turn movements were banned at intersections could always serve trips at a higher rate than one-way networks could, even long trips. Thus, the trip-serving capacity of a one-way network can actually be increased when it is converted to two-way operation if left turns are banned. In this way, livability and efficiency objectives can be achieved simultaneously. This framework can be used by planners and engineers to determine how much a network's capacity changes after a conversion, and also to unveil superior conversion options.</jats:p>",
+      "read_status": "metadata_and_abstract",
+      "full_text_read": false
+    },
+    {
+      "DOI": "10.1016/j.trb.2008.02.002",
+      "title": [
+        "Existence of urban-scale macroscopic fundamental diagrams: Some experimental findings"
+      ],
+      "author": [
+        {
+          "given": "Nikolas",
+          "family": "Geroliminis",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Carlos F.",
+          "family": "Daganzo",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2008,
+            11
+          ]
+        ]
+      },
+      "abstract": null,
+      "read_status": "metadata_only",
+      "full_text_read": false
+    },
+    {
+      "DOI": "10.1016/j.tra.2011.03.003",
+      "title": [
+        "Rewarding rush-hour avoidance: A study of commuters’ travel behavior"
+      ],
+      "author": [
+        {
+          "given": "Eran",
+          "family": "Ben-Elia",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Dick",
+          "family": "Ettema",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2011,
+            8
+          ]
+        ]
+      },
+      "abstract": null,
+      "read_status": "metadata_only",
+      "full_text_read": false
+    },
+    {
+      "DOI": "10.1073/pnas.1611675114",
+      "title": [
+        "On-demand high-capacity ride-sharing via dynamic trip-vehicle assignment"
+      ],
+      "author": [
+        {
+          "given": "Javier",
+          "family": "Alonso-Mora",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Computer Science and Artificial Intelligence Laboratory, Massachusetts Institute of Technology, Cambridge, MA 02139;"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Samitha",
+          "family": "Samaranayake",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Civil and Environmental Engineering, Cornell University, Ithaca, NY 14853;"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Alex",
+          "family": "Wallar",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Computer Science and Artificial Intelligence Laboratory, Massachusetts Institute of Technology, Cambridge, MA 02139;"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Emilio",
+          "family": "Frazzoli",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Laboratory for Information and Decision Systems, Massachusetts Institute of Technology, Cambridge, MA 02139"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Daniela",
+          "family": "Rus",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Computer Science and Artificial Intelligence Laboratory, Massachusetts Institute of Technology, Cambridge, MA 02139;"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            1,
+            3
+          ]
+        ]
+      },
+      "abstract": "<jats:title>Significance</jats:title>\n                  <jats:p>Ride-sharing services can provide not only a very personalized mobility experience but also ensure efficiency and sustainability via large-scale ride pooling. Large-scale ride-sharing requires mathematical models and algorithms that can match large groups of riders to a fleet of shared vehicles in real time, a task not fully addressed by current solutions. We present a highly scalable anytime optimal algorithm and experimentally validate its performance using New York City taxi data and a shared vehicle fleet with passenger capacities of up to ten. Our results show that 2,000 vehicles (15% of the taxi fleet) of capacity 10 or 3,000 of capacity 4 can serve 98% of the demand within a mean waiting time of 2.8 min and mean trip delay of 3.5 min.</jats:p>",
+      "read_status": "metadata_and_abstract",
+      "full_text_read": false
+    }
+  ],
+  "notes": [
+    "Google responses were challenge pages, not usable search results.",
+    "TDCS V4.1 pp4–10 read; M03A/M04A/M05A provisional vs revised timestamp windows differ; M05A speed unit in manual is inconsistent and unresolved.",
+    "OSM, CODiS, Open-Meteo and Europe PMC requests blocked by environment network; not evidence that the public data do not exist."
+  ]
+}
