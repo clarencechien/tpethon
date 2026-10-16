@@ -18,7 +18,7 @@
 <article id="sumo"><span class="tag actual">R6 · 已讀官方方法文件；論文僅核對書目</span><h3>Alvarez Lopez 等（2018），Microscopic Traffic Simulation using SUMO</h3><p>ITSC 2018, 2575–2582。SUMO 官方 DTA 文件說明迭代模擬與路徑選擇；適合作為下一階段的工具方法參考。本站尚未建成或跑完內湖 SUMO 模型。</p><a href="https://doi.org/10.1109/ITSC.2018.8569938">論文 DOI</a> · <a href="https://sumo.dlr.de/docs/Demand/Dynamic_User_Assignment.html">官方動態路徑選擇文件</a></article></div>
 <p class="citation">查核紀錄：<a href="data/simulation/network-references.json">本次論文書目與方法來源</a> · <a href="data/simulation/brt-research.json">BRT 原文、頁碼與校驗碼</a>。廣州 20% 等補充案例及限制見<a href="brt.html#brt-research-details">快速公車研究明細</a>。</p></section>
 <section class="panel" id="next"><h2>六、下一步：先補基準，再試單一道路</h2><p>以下是待執行計畫，不是已完成的模型或工程建議。</p><ol class="steps roadmap">
-<li><b>先讓資料真的連續進來。</b>查明 GitHub 定時觸發為何沒有紀錄；以實際連續成功執行與缺測告警驗收。當天持續存即時資料，隔日回補市區歷史。若排程持續不可靠，再評估外部排程。</li>
+<li><b>先讓資料真的連續進來。</b>10/16 15:30（台北時間）已出現第一筆成功的即時快照定時執行；半日歷史回補尚查無定時紀錄。下一步以連續成功與缺測告警驗收，不能用單次成功判定已穩定。當天持續存即時資料，隔日回補市區歷史。若排程持續不可靠，再評估外部排程。<a href="https://github.com/clarencechien/tpethon/actions/runs/38867680289">查看首次成功紀錄</a>。</li>
 <li><b>選一條調查走廊，建立可對照的現況。</b>先核對陽光街東向、新明路東北向等反覆低速線索；確認測站正常、紅綠燈與上下游排隊。界定起訖路口與周邊改道路網，不因低速排名就決定封路。</li>
 <li><b>補能決定結果的資料。</b>車道、轉彎、單行方向、號誌秒數、道路儲車空間、已確認統計區間的流量、通勤起訖、居民／物流、汽機車比例、公車上下車與旅行時間。逐時雨量、事故、施工與國定假日一起記錄。</li>
 <li><b>先驗證模型重現現況。</b>以 SUMO 建真實路網，用部分日期校正、其他日期驗證，保留未完成旅次；比較方向別流量、旅行時間與排隊位置。誤差門檻依實測精度先訂，不事後為通過而調整。</li>
