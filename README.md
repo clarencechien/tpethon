@@ -7,6 +7,8 @@
 
 公開網站：**https://clarencechien.github.io/tpethon/**
 
+[實驗導覽 E1–E6](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
+
 首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
 
 ```sh
