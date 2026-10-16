@@ -64,7 +64,7 @@ def build(output,with_history=False,seed_archive=None):
                 raise RuntimeError('Cannot safely read previous Pages history; preserve the existing publication and retry later.') from e
     # Never remove a user-supplied output directory or unrelated files.
     output.mkdir(parents=True,exist_ok=True)
-    for name in ('service.html','service.css','service.js','service_logic.js','corridor.html','corridor.css','corridor.js','ui.js','navigation.js','methods.html','network.html','network.js','network_logic.js','index.html','map.html','report.css','readable.css','report.js','availability.js','map.css','map.js','logic.js','history.js','plan.html','plan.js','plan_logic.js','plan.css',
+    for name in ('fleet.html','fleet.css','fleet.js','fleet_logic.js','service.html','service.css','service.js','service_logic.js','corridor.html','corridor.css','corridor.js','ui.js','navigation.js','methods.html','network.html','network.js','network_logic.js','index.html','map.html','report.css','readable.css','report.js','availability.js','map.css','map.js','logic.js','history.js','plan.html','plan.js','plan_logic.js','plan.css',
                  'simulation.html','simulation.js','simulation_logic.js','simulation.css','growth.js','growth_logic.js','brt.html','brt.js','brt_logic.js','brt.css'):
         shutil.copy2(ROOT/'static'/name,output/name)
     shutil.copytree(ROOT/'static'/'vendor',output/'vendor',dirs_exist_ok=True)

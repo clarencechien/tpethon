@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T09:45:02.435Z",
+  "generated_at": "2026-10-16T10:22:26.848Z",
   "input_sha256": "fc52b969ecd541f37f9b7da10a95193cc711ce3067178cde76311cd92549e7f3",
-  "model_sha256": "9e31c5239e7730cd47802468fe5754ce5138f7b431856eb265fcb2f8b0b9c773",
+  "model_sha256": "f08bc0b0f0cbb2c183779c6623a5d078bb0587a85394c0d7f32a7bb4b8c23122",
   "calibrated": false,
   "shuttle": {
     "assumptions": {
@@ -15,7 +15,9 @@
       "roundTrip": 30,
       "rest": 10,
       "reserve": 0.1,
-      "tail": 60
+      "tail": 60,
+      "arrivalInterval": 0,
+      "arrivalPhase": 0
     },
     "cases": [
       {

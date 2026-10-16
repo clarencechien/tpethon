@@ -5,7 +5,7 @@ const EPS=1e-7;
 const sum=xs=>xs.reduce((a,b)=>a+b,0);
 const valid=(x,min,max)=>Number.isFinite(x)&&x>=min&&x<=max;
 export const serviceDefaults=Object.freeze({share:.2,capacity:60,load:.8,headway:3,fleet:14,
- travelLag:30,roundTrip:30,rest:10,reserve:.1,tail:60});
+ travelLag:30,roundTrip:30,rest:10,reserve:.1,tail:60,arrivalInterval:0,arrivalPhase:0});
 export function weightedPercentile(events, share=.95){
  const total=sum(events.map(e=>e.people));if(total<EPS)return null;
  let seen=0;for(const e of [...events].sort((a,b)=>a.wait-b.wait)){seen+=e.people;if(seen>=total*share-EPS)return e.wait;}
@@ -17,6 +17,7 @@ export function validateService(a){
  for(const [key,[lo,hi]] of Object.entries(ranges))if(!valid(a[key],lo,hi))throw Error('接駁參數超出範圍：'+key);
  for(const key of ['capacity','fleet','travelLag','roundTrip','rest','tail'])if(!Number.isInteger(a[key]))throw Error('接駁參數須為整數：'+key);
  if(!Number.isInteger(a.headway*2))throw Error('班距須為半分鐘倍數');
+ if(![0,3,6].includes(a.arrivalInterval)||!valid(a.arrivalPhase,0,a.arrivalInterval===0?0:a.arrivalInterval-.5)||!Number.isInteger(a.arrivalPhase*2))throw Error('到站間隔或時間偏移無效');
  if(Math.floor(a.capacity*a.load)<1)throw Error('有效容量不足一人');
 }
 export function simulateStation(station,options={}){
@@ -29,7 +30,12 @@ export function simulateStation(station,options={}){
  const start=a.travelLag,end=start+180,limit=end+a.tail,dt=.5;
  for(let step=0;step<=limit*2;step++){
   const t=step*dt,hour=Math.floor((t-start)/60);
-  if(t>=start&&t<end&&demand>EPS){const people=station.hourly[hour]*a.share/120;if(people>0){cohorts.push({time:t,people});waiting+=people;}}
+  if(t>=start&&t<end&&demand>EPS){
+   // Bursts divide each hour exactly; every half-minute phase preserves each hourly cohort.
+   const dueArrival=a.arrivalInterval===0||(t-start)%a.arrivalInterval===a.arrivalPhase;
+   const people=dueArrival?station.hourly[hour]*a.share*(a.arrivalInterval||dt)/60:0;
+   if(people>0){cohorts.push({time:t,people});waiting+=people;}
+  }
   peakWaiting=Math.max(peakWaiting,waiting);
   // Fixed schedule: an unavailable fleet misses a departure instead of teleporting a bus.
   const due=t>=start&&Number.isInteger((t-start)/a.headway);
