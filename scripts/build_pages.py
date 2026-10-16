@@ -53,7 +53,14 @@ def build(output,with_history=False,seed_archive=None):
             with urllib.request.urlopen(PREVIOUS_URL,timeout=20) as r:
                 old=json.load(r)
             previous+=old.get('frames',[])
-        except Exception as e:print('Previous public history unavailable; starting new history:',str(e),file=sys.stderr)
+        except Exception as e:
+            # An already-published site's network error must not erase the accumulated history.
+            # 404 is expected only before the first publication.
+            from urllib.error import HTTPError
+            if isinstance(e,HTTPError) and e.code==404:
+                print('No previous Pages publication; starting from verified seed observations.',file=sys.stderr)
+            else:
+                raise RuntimeError('Cannot safely read previous Pages history; preserve the existing publication and retry later.') from e
     # Never remove a user-supplied output directory or unrelated files.
     output.mkdir(parents=True,exist_ok=True)
     for name in ('index.html','map.css','map.js','logic.js'):

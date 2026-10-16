@@ -27,4 +27,19 @@ class DirectionalTests(unittest.TestCase):
         frame={'captured_at':'2026-10-16T08:00:00+08:00','road':{'timestamp':'2026-10-16T07:59:00+08:00','rows':[]}}
         new={'captured_at':'2026-10-16T08:15:00+08:00','road':{'error':'unavailable','rows':[]}}
         self.assertEqual(len(merge_frames([frame],new)),2)
+
+class HistoryPersistenceTests(unittest.TestCase):
+    def test_unavailable_published_history_does_not_overwrite_existing_output(self):
+        from tempfile import TemporaryDirectory
+        from pathlib import Path
+        from unittest.mock import patch
+        from urllib.error import URLError
+        from scripts.build_pages import build
+        with TemporaryDirectory() as folder:
+            output=Path(folder);(output/'index.html').write_text('previous good publication')
+            with patch('scripts.build_pages.urllib.request.urlopen',side_effect=URLError('temporary network failure')),patch('scripts.build_pages.collect') as collect:
+                with self.assertRaises(RuntimeError):build(output,with_history=True)
+                collect.assert_not_called()
+            self.assertEqual((output/'index.html').read_text(),'previous good publication')
+
 if __name__=='__main__':unittest.main()
