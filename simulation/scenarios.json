@@ -1,15 +1,121 @@
 {
   "schema_version": 1,
-  "status": "design_only_not_calibrated_network_forecasts",
-  "study_area": {"bbox": [121.54, 25.045, 121.63, 25.105], "boundary_note": "Simulation network must extend beyond this visualization bbox to include diversion routes."},
-  "periods": {"morning": ["07:00", "09:30"], "evening": ["17:00", "19:30"]},
-  "baseline": {"demand_od": null, "turn_restrictions_verified": false, "signals_verified": false, "calibrated": false},
+  "status": "illustrative_queue_executable_network_forecasts_not_calibrated",
+  "study_area": {
+    "bbox": [
+      121.54,
+      25.045,
+      121.63,
+      25.105
+    ],
+    "boundary_note": "Simulation network must extend beyond this visualization bbox to include diversion routes."
+  },
+  "periods": {
+    "morning": [
+      "07:00",
+      "09:30"
+    ],
+    "evening": [
+      "17:00",
+      "19:30"
+    ]
+  },
+  "baseline": {
+    "demand_od": null,
+    "turn_restrictions_verified": false,
+    "signals_verified": false,
+    "calibrated": false
+  },
   "scenarios": [
-    {"id": "S0", "name": "現況", "method": "SUMO + iterative dynamic traffic assignment", "gate": "validated network, OD and signal plans", "outputs": ["person_hours", "vehicle_hours", "queue_spillback", "bus_travel_time_p50_p95"]},
-    {"id": "S1", "name": "私車轉乘接駁", "assumed_conversion_fractions": [0.1, 0.2, 0.3], "executable_now": "static/plan_logic.js capacity accounting", "network_effect": null},
-    {"id": "S2", "name": "公車優先", "parameters_to_test": ["signal priority", "bus lane", "stop placement"], "network_effect": null},
-    {"id": "S3", "name": "尖峰限制穿越車流", "restricted_link_ids": [], "boundary_review_required": true, "necessary_access": ["residents", "accessible transport", "emergency services", "scheduled freight"], "network_effect": null},
-    {"id": "S4", "name": "錯峰上班", "assumed_shift_minutes": [30, 60], "assumed_participation_fractions": [0.1, 0.2, 0.3], "preserve_total_trips": true, "network_effect": null}
+    {
+      "id": "S0",
+      "name": "現況",
+      "method": "SUMO + iterative dynamic traffic assignment",
+      "gate": "validated network, OD and signal plans",
+      "outputs": [
+        "person_hours",
+        "vehicle_hours",
+        "queue_spillback",
+        "bus_travel_time_p50_p95"
+      ]
+    },
+    {
+      "id": "S1",
+      "name": "私車轉乘接駁",
+      "assumed_conversion_fractions": [
+        0.1,
+        0.2,
+        0.3
+      ],
+      "executable_now": "static/plan_logic.js capacity accounting",
+      "network_effect": null
+    },
+    {
+      "id": "S2",
+      "name": "公車優先",
+      "parameters_to_test": [
+        "signal priority",
+        "bus lane",
+        "stop placement"
+      ],
+      "network_effect": null
+    },
+    {
+      "id": "S3",
+      "name": "尖峰限制穿越車流",
+      "restricted_link_ids": [],
+      "boundary_review_required": true,
+      "necessary_access": [
+        "residents",
+        "accessible transport",
+        "emergency services",
+        "scheduled freight"
+      ],
+      "network_effect": null
+    },
+    {
+      "id": "S4",
+      "name": "錯峰上班",
+      "assumed_shift_minutes": [
+        30,
+        60
+      ],
+      "assumed_participation_fractions": [
+        0.1,
+        0.2,
+        0.3
+      ],
+      "preserve_total_trips": true,
+      "network_effect": null
+    }
   ],
-  "validation": {"separate_calibration_and_holdout_days": true, "weather_stratification_required": true, "metrics": ["directional counts after interval verification", "speeds", "bus travel time", "queue location and onset", "boundary spillover"], "closure_improvement_claim_allowed": false}
+  "validation": {
+    "separate_calibration_and_holdout_days": true,
+    "weather_stratification_required": true,
+    "metrics": [
+      "directional counts after interval verification",
+      "speeds",
+      "bus travel time",
+      "queue location and onset",
+      "boundary spillover"
+    ],
+    "closure_improvement_claim_allowed": false
+  },
+  "illustrative_experiment": {
+    "engine": "static/simulation_logic.js",
+    "page": "simulation.html",
+    "report": "data/simulation/experiment.json",
+    "command": "node scripts/run_simulation.mjs",
+    "scenarios": [
+      "baseline",
+      "bus",
+      "stagger",
+      "restrict",
+      "combined",
+      "allbus"
+    ],
+    "demand_and_capacity": "user_assumptions",
+    "network_validated": false,
+    "note": "Two abstract channels, fixed diversion, no spillback or equilibrium; not S0 SUMO calibration."
+  }
 }

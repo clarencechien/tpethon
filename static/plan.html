@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>內湖交通｜週摘要與情境試算</title><link rel="stylesheet" href="map.css"><link rel="stylesheet" href="plan.css"></head>
-<body><header><a class="brand" href="./"><span class="logo">↗</span><span>內湖交通觀測站<small>WEEKLY EVIDENCE & SCENARIOS</small></span></a><nav><a href="./">現況地圖</a><span class="nav-active">週摘要／Plan</span></nav><span class="beta">ACTUAL + ASSUMPTIONS</span></header><main>
+<body><header><a class="brand" href="./"><span class="logo">↗</span><span>內湖交通觀測站<small>WEEKLY EVIDENCE & SCENARIOS</small></span></a><nav><a href="./">現況地圖</a><span class="nav-active">週摘要／Plan</span><a href="simulation.html">情境模擬</a></nav><span class="beta">ACTUAL + ASSUMPTIONS</span></header><main>
 <section class="intro"><div><div class="eyebrow">先看實測，再調整假設</div><h1>一週交通，下一步怎麼改？</h1><p>週摘要來自官方 VD；巴士試算使用你輸入的假設。兩者分開呈現。</p></div></section>
 <div id="weekly-error" class="alert" role="status" hidden></div>
 <section class="panel"><div class="section-label">本週與上週 · 實際觀測 <span>01</span></div><p id="weekly-period">讀取 GitHub 週摘要…</p><div id="week-cards" class="week-cards"></div>
@@ -20,5 +20,5 @@
 </div></form><p id="scenario-error" class="alert" role="status" hidden></p><div id="scenario-results" class="plan-results" aria-live="polite"></div>
 <p class="fine">班次假設均勻分布，沒有把站台排隊、路線需求不均、空駛及駕駛排班最佳化納入。公車若仍塞在車陣，循環時間會增加。此試算不預測速度改善，也不保證可以少幾分鐘。</p>
 <h3>循環時間敏感度</h3><div class="table-wrap"><table><thead><tr><th>循環時間</th><th>每小時班次</th><th>營運車輛</th><th>含備車</th></tr></thead><tbody id="sensitivity"></tbody></table></div></section>
-<section class="panel plan-panel"><div class="section-label">限行與路網模擬 · 準備狀態 <span>03</span></div><h2>哪些資料已到位，哪些還不足？</h2><div id="readiness"></div><p>下一階段：現況校正 → 私車減少 10/20/30% → 接駁／公車優先 → 尖峰限行與邊界回堵。每個情境都要保留必要通行，並核對外圍道路。</p><a href="https://github.com/clarencechien/tpethon/blob/main/docs/SIMULATION_PLAN.md" target="_blank" rel="noreferrer">完整演算法、校正條件與待補資料 ↗</a></section>
+<section class="panel plan-panel"><div class="section-label">限行與路網模擬 · 準備狀態 <span>03</span></div><h2>先跑情境，再補齊路網</h2><p><a href="simulation.html">開啟互動模擬：巴士、錯峰、限行與外圍排隊 →</a></p><div id="readiness"></div><p>下一階段：現況校正 → 私車減少 10/20/30% → 接駁／公車優先 → 尖峰限行與邊界回堵。每個情境都要保留必要通行，並核對外圍道路。</p><a href="https://github.com/clarencechien/tpethon/blob/main/docs/SIMULATION_PLAN.md" target="_blank" rel="noreferrer">完整演算法、校正條件與待補資料 ↗</a></section>
 <footer><span>資料時間：Asia/Taipei · 來源：臺北市／TDX</span><span>實測摘要 ≠ 因果效果；容量試算 ≠ 已校正交通模擬</span></footer></main><script type="module" src="plan.js"></script></body></html>

@@ -44,3 +44,5 @@ TDX 歷史查詢排除當天，官方文件標示每天 08:00 更新至昨天。
 初次回補由 Codex 環境執行。`weekly-data.yml` 現已設定台北時間每日 11:23、23:23 自動回補並提交兩週摘要，需另在 Actions 設定 `TDX_CLIENT_ID`／`TDX_CLIENT_SECRET`；Codex 環境變數不會自動傳入。逐日 compact 檔只放 Actions cache，原始下載不進 Git。失敗保留舊摘要，成功後觸發 Pages。MQTT 是另一路即時串流，不是此次歷史檔的來源。設定與資料時效見 [README](../README.md#每日兩次更新上週本週)。
 
 每日檔不覆寫、總量達 100 MB 或單日超過 5 MB 時停止新增，改評估物件儲存或發布資產；不要把大型檔先提交後刪除，Git 歷史仍會保存。按本次大小外推一年約 216 MB JSON，實際以每天測站與資料量為準。GitHub 儲存的是公開設備彙整，沒有公車車牌、乘客紀錄或任何金鑰。
+
+`simulation/experiment.json` 是約 370 KB 的**假設情境實驗**，不是實際交通觀測。含雙通道模型版本、全部輸入、六種情境的逐分鐘排隊／流量、車隊需求與容量敏感度；可用 `node scripts/run_simulation.mjs` 重現。流量單位是小客車當量 PCU，時間總量是 PCU·小時，不是乘客人時。原始 TDX 檔及憑證不包含在這份輸出中。

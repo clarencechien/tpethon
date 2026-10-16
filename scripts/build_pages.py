@@ -63,7 +63,8 @@ def build(output,with_history=False,seed_archive=None):
                 raise RuntimeError('Cannot safely read previous Pages history; preserve the existing publication and retry later.') from e
     # Never remove a user-supplied output directory or unrelated files.
     output.mkdir(parents=True,exist_ok=True)
-    for name in ('index.html','map.css','map.js','logic.js','history.js','plan.html','plan.js','plan_logic.js','plan.css'):
+    for name in ('index.html','map.css','map.js','logic.js','history.js','plan.html','plan.js','plan_logic.js','plan.css',
+                 'simulation.html','simulation.js','simulation_logic.js','simulation.css'):
         shutil.copy2(ROOT/'static'/name,output/name)
     shutil.copytree(ROOT/'static'/'vendor',output/'vendor',dirs_exist_ok=True)
     (output/'data').mkdir(exist_ok=True)

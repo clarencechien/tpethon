@@ -144,3 +144,15 @@ python scripts/refresh_weeks.py
 ```
 
 週摘要保留在 Git 歷史中，工作目錄只保留上週與本週；這不是一年期原始交通資料庫。長期研究仍需另存每日觀測及天氣、事件資料。
+
+
+### 可操作的交通情境模擬
+
+[開啟情境模擬](https://clarencechien.github.io/tpethon/simulation.html)：雙通道逐分鐘排隊模型，測試改搭巴士、延後出發、限行改道、組合方案與本批人次全改巴士。可調整假設、回放隊列、比較外圍壅塞和容量±20%敏感度，下載包含輸入及完整時間序列的 JSON。無需 TDX 金鑰即可執行。
+
+需求、容量、循環時間均為明示假設；實測週摘要僅列查證候選，尚未用來校正模型。結果不是內湖街道預測，也不是乘客福利或最佳政策結論。[方法與第一輪結果](docs/SIMULATION_PLAN.md#三之一已執行的-m0b雙通道排隊情境實驗)。
+
+```sh
+node scripts/run_simulation.mjs  # 重現並寫入 data/simulation/experiment.json
+node --test tests/simulation_logic.test.mjs
+```
