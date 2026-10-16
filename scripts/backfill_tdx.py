@@ -10,6 +10,7 @@ import io
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -52,12 +53,24 @@ def endpoint(kind, day, **extra):
     query = {'Dates': day, '$format': 'JSONL', **extra}
     return BASE + kind + '/City/Taipei?' + urllib.parse.urlencode(query)
 
+def open_data(request):
+    for attempt in range(4):
+        try:
+            return OPENER.open(request, timeout=120)
+        except urllib.error.HTTPError as exc:
+            if exc.code not in (429, 502, 503, 504) or attempt == 3: raise
+            retry = exc.headers.get('Retry-After', '')
+            delay = max(10 * (attempt + 1), int(retry) if retry.isdigit() else 0)
+            if delay > 60: raise  # Do not retry earlier than the server permits.
+            print(f'TDX HTTP {exc.code}; retry in {delay}s', flush=True)
+            exc.close(); time.sleep(delay)
+
 def download(url, bearer, path):
     request = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + bearer, 'Accept-Encoding': 'gzip'})
     digest = hashlib.sha256(); size = 0
     temporary = path.with_suffix('.part')
     try:
-        with OPENER.open(request, timeout=120) as r, temporary.open('wb') as f:
+        with open_data(request) as r, temporary.open('wb') as f:
             while chunk := r.read(1024 * 1024):
                 size += len(chunk)
                 if size > MAX_DOWNLOAD:
@@ -173,14 +186,10 @@ def publish(payload, output):
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     return entry
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--date', required=True)
-    parser.add_argument('--output', type=Path, default=ROOT / 'data' / 'history')
-    args = parser.parse_args(); day = date.fromisoformat(args.date).isoformat()
+def backfill(day, output, bearer=None):
     if day >= datetime.now(TZ).date().isoformat(): raise ValueError('TDX historical service excludes today')
     cache = ROOT / 'local-data' / 'tdx' / day; cache.mkdir(parents=True, exist_ok=True)
-    bearer = token(); evidence = {}; static = cache / 'static.response'; live = cache / 'live.response'
+    bearer = bearer or token(); evidence = {}; static = cache / 'static.response'; live = cache / 'live.response'
     meta_path = cache / 'meta.response'
     meta_url = endpoint('Live/VD', day, Meta='true')
     evidence['meta'] = download(meta_url, bearer, meta_path)
@@ -204,8 +213,15 @@ def main():
     payload['source_statistics'] = expected
     payload['sources'] = evidence
     payload['attribution'] = '交通部 TDX／臺北市交通管制工程處；依來源授權條款使用。'
-    entry = publish(payload, args.output)
-    print(json.dumps(entry, ensure_ascii=False))
+    entry = publish(payload, output)
+    return entry
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--date', required=True)
+    parser.add_argument('--output', type=Path, default=ROOT / 'data' / 'history')
+    args = parser.parse_args(); day = date.fromisoformat(args.date).isoformat()
+    print(json.dumps(backfill(day, args.output), ensure_ascii=False))
 
 if __name__ == '__main__':
     try: main()

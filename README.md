@@ -109,3 +109,19 @@ python scripts/analyze_metro_od.py
 ```
 
 採集為單次操作，沒有自動常駐；資料保存於 Git 忽略的 `local-data/research/`。目前只驗證兩次歷史採樣，尚不具備完整晨尖峰歷史。參見研究報告中的限制與排程注意事項。
+
+## 本週／上週摘要與 Plan
+
+[週摘要／Plan](https://clarencechien.github.io/tpethon/plan.html)讀取 GitHub 的 `data/weeks/`。本次以 2026-10-16 為截點，兩週範圍為 10/5–10/11 與 10/12–10/18，官方歷史最多到 10/15；未發布與未來日期不補零。配對比較只採相同星期、時段與雙方有效測站，天氣與事故仍未控制。
+
+Plan 提供巴士載客量／班次／車隊容量試算，以及循環時間敏感度；輸入人次為明示假設，不由 VD 重複計數或捷運人次推定。尚未發布限行後的車速、通勤時間或改道預測。取得的候選路段、公車資料及剩餘缺口見 [模擬計畫](docs/SIMULATION_PLAN.md)。
+
+```sh
+python scripts/backfill_weeks.py --as-of 2026-10-16
+python scripts/summarize_weeks.py --as-of 2026-10-16 --calendar local-data/simulation/calendar-2026.json
+python scripts/fetch_simulation.py
+python scripts/prepare_simulation.py
+python scripts/build_pages.py --history
+```
+
+新增的逐日檔與原始下載只保存於忽略的 `local-data/`，GitHub 新增週摘要及小型參考資料；先前10/15回放繼續保留。Actions目前部署已提交摘要，不會自動向TDX回補。

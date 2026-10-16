@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-16",
+  "timezone": "Asia/Taipei",
+  "weeks": [
+    {
+      "file": "2026-10-05.json",
+      "start": "2026-10-05",
+      "end": "2026-10-11",
+      "available_days": 7,
+      "complete": true,
+      "bytes": 452633,
+      "sha256": "e1229b5abe0b66f6c8fffb6be32fbb02ac4a9128df321a1103dd375f2cf9ddb2"
+    },
+    {
+      "file": "2026-10-12.json",
+      "start": "2026-10-12",
+      "end": "2026-10-18",
+      "available_days": 4,
+      "complete": false,
+      "bytes": 260541,
+      "sha256": "a05f2f4c24e15617f165e178bb8f5348b25cbcc4105ec54d21b2185b80b88638"
+    }
+  ],
+  "matched_weekdays": {
+    "am": {
+      "day_pairs": [
+        {
+          "previous": "2026-10-05",
+          "current": "2026-10-12",
+          "paired_bins": 10,
+          "paired_observations": 1867
+        },
+        {
+          "previous": "2026-10-06",
+          "current": "2026-10-13",
+          "paired_bins": 10,
+          "paired_observations": 1873
+        },
+        {
+          "previous": "2026-10-07",
+          "current": "2026-10-14",
+          "paired_bins": 10,
+          "paired_observations": 1871
+        },
+        {
+          "previous": "2026-10-08",
+          "current": "2026-10-15",
+          "paired_bins": 10,
+          "paired_observations": 1908
+        }
+      ],
+      "previous": {
+        "valid": 7519,
+        "slow_share": 0.07938707535875127,
+        "hot_share": 0.035526853344858625,
+        "mean_speed": 41.843462851566244
+      },
+      "current": {
+        "valid": 7519,
+        "slow_share": 0.07561098358457558,
+        "hot_share": 0.03264541337622085,
+        "mean_speed": 42.45423524487646
+      },
+      "paired_bins": 40,
+      "paired_observations": 7519,
+      "difference_percentage_points": -0.3776091774175691,
+      "causal_effect": false,
+      "weather_adjusted": false
+    },
+    "pm": {
+      "day_pairs": [
+        {
+          "previous": "2026-10-05",
+          "current": "2026-10-12",
+          "paired_bins": 10,
+          "paired_observations": 1941
+        },
+        {
+          "previous": "2026-10-06",
+          "current": "2026-10-13",
+          "paired_bins": 9,
+          "paired_observations": 1753
+        },
+        {
+          "previous": "2026-10-07",
+          "current": "2026-10-14",
+          "paired_bins": 10,
+          "paired_observations": 1909
+        },
+        {
+          "previous": "2026-10-08",
+          "current": "2026-10-15",
+          "paired_bins": 10,
+          "paired_observations": 1978
+        }
+      ],
+      "previous": {
+        "valid": 7581,
+        "slow_share": 0.10956434184207728,
+        "hot_share": 0.05814264674095815,
+        "mean_speed": 39.13765191347216
+      },
+      "current": {
+        "valid": 7581,
+        "slow_share": 0.09592601910531481,
+        "hot_share": 0.05091003525540422,
+        "mean_speed": 40.64701204319516
+      },
+      "paired_bins": 39,
+      "paired_observations": 7581,
+      "difference_percentage_points": -1.3638322736762465,
+      "causal_effect": false,
+      "weather_adjusted": false
+    },
+    "off": {
+      "day_pairs": [
+        {
+          "previous": "2026-10-05",
+          "current": "2026-10-12",
+          "paired_bins": 24,
+          "paired_observations": 4522
+        },
+        {
+          "previous": "2026-10-06",
+          "current": "2026-10-13",
+          "paired_bins": 24,
+          "paired_observations": 4671
+        },
+        {
+          "previous": "2026-10-07",
+          "current": "2026-10-14",
+          "paired_bins": 24,
+          "paired_observations": 4657
+        },
+        {
+          "previous": "2026-10-08",
+          "current": "2026-10-15",
+          "paired_bins": 24,
+          "paired_observations": 4775
+        }
+      ],
+      "previous": {
+        "valid": 18625,
+        "slow_share": 0.0859112001759818,
+        "hot_share": 0.036561593440681536,
+        "mean_speed": 41.60281286832449
+      },
+      "current": {
+        "valid": 18625,
+        "slow_share": 0.08089999729715189,
+        "hot_share": 0.029100697885441555,
+        "mean_speed": 42.51080939832039
+      },
+      "paired_bins": 96,
+      "paired_observations": 18625,
+      "difference_percentage_points": -0.5011202878829918,
+      "causal_effect": false,
+      "weather_adjusted": false
+    }
+  },
+  "calendar_source": "https://raw.githubusercontent.com/ruyut/TaiwanCalendar/master/data/2026.json",
+  "calendar_verified_official": false,
+  "calendar_sha256": "8adf83e52269a338cabf0ea529ca0ef3047ddd963f2c8b29004776f12fd470b5"
+}

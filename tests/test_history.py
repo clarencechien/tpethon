@@ -44,3 +44,17 @@ class HistoryTests(unittest.TestCase):
             original=(output/entry['file']).read_bytes();changed=copy.deepcopy(result);changed['frames'][0][1][0][1]=99
             with self.assertRaises(ValueError):publish(changed,output)
             self.assertEqual((output/entry['file']).read_bytes(),original)
+
+class DownloadRetryTests(unittest.TestCase):
+    def test_rate_limit_retries_with_delay_but_auth_failure_does_not(self):
+        from unittest.mock import patch,MagicMock
+        from urllib.error import HTTPError
+        from scripts.backfill_tdx import open_data
+        response=MagicMock()
+        limited=HTTPError('https://tdx.transportdata.tw/test',429,'rate limited',{'Retry-After':'15'},None)
+        with patch('scripts.backfill_tdx.OPENER.open',side_effect=[limited,response]) as call,patch('scripts.backfill_tdx.time.sleep') as sleep:
+            self.assertIs(open_data(object()),response);sleep.assert_called_once_with(15);self.assertEqual(call.call_count,2)
+        unauthorized=HTTPError('https://tdx.transportdata.tw/test',401,'unauthorized',{},None)
+        with patch('scripts.backfill_tdx.OPENER.open',side_effect=unauthorized) as call,patch('scripts.backfill_tdx.time.sleep') as sleep:
+            with self.assertRaises(HTTPError):open_data(object())
+            sleep.assert_not_called();self.assertEqual(call.call_count,1)
