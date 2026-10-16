@@ -17,6 +17,7 @@ with sync_playwright() as p:
     browser=p.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox'])
     page=browser.new_page(viewport={'width':1440,'height':1000});errors=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
+    page.route('**/data/history/index.json',lambda route:route.fulfill(status=200,content_type='application/json',body=json.dumps({'schema_version':1,'days':[]})))
     page.route('**/data/dashboard.json*',lambda route:route.fulfill(status=200,content_type='application/json',body=json.dumps(fixture)))
     page.goto('http://127.0.0.1:8001')
     page.wait_for_function("document.querySelector('#stat-valid').textContent.includes('/')")

@@ -31,7 +31,7 @@ jobs:
       - name: Validate data interpretation
         run: |
           python -m unittest discover -s tests -v
-          node --test tests/map_logic.test.mjs
+          node --test tests/*.test.mjs
       - name: Build current observations and retained history
         run: python scripts/build_pages.py --history
       - uses: actions/configure-pages@v5

@@ -1,3 +1,4 @@
+import {decodeArchive,combineFrames} from './history.js';
 import {classify,filtered,repeatedEvidence,color,PERIODS,taipeiParts,previousDay,frameTime,periodFrames,summarizePeriod,heatCells} from './logic.js';
 const $=id=>document.getElementById(id);
 const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -11,6 +12,10 @@ const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoo
 tiles.on('tileerror',()=>{$('tile-warning').hidden=false;});
 const heatLayer=L.layerGroup().addTo(map),roadLayer=L.layerGroup(),busLayer=L.layerGroup(),metroLayer=L.layerGroup().addTo(map);
 let data,metro,index=0,selectedId,markers=new Map(),mode='latest',playTimer=null;
+let historyIndex={days:[]},historyReady=false,selectionRequest=0;
+const archives=new Map(),archiveRequests=new Map();
+let recentFrames=[];
+const latestIndex=()=>data.frames.findIndex(f=>(f.road.timestamp||f.captured_at)===(data.current.road.timestamp||data.current.captured_at));
 const today=()=>taipeiParts(new Date().toISOString()).day;
 const currentFilters=()=>({corridor:$('corridor').value,direction:$('direction').value,search:$('search').value});
 const chosenFrames=()=>data?periodFrames(data.frames,$('observation-date').value,$('period').value):[];
@@ -53,14 +58,65 @@ for(const stop of bus.rows){const popup=node('div');popup.append(node('b',stop.n
 function renderMetro(){if(!metro)return;$('metro-period').textContent=`${metro.month} 歷史 OD · ${metro.weekdays} 個週一至週五`;$('metro-total').textContent=fmt(metro.mean_per_weekday);$('metro-bars').replaceChildren();const max=metro.top_origins[0]?.mean_per_weekday||1;for(const r of metro.top_origins.slice(0,5)){const row=node('div',undefined,'bar-row'),label=node('div',undefined,'bar-label'),track=node('div',undefined,'bar-track'),bar=node('div',undefined,'bar-fill');label.append(node('span',r.station),node('span',fmt(r.mean_per_weekday)+' 人次／日'));bar.style.width=r.mean_per_weekday/max*100+'%';track.append(bar);row.append(label,track);$('metro-bars').append(row);}
 // Approximate station centers for orientation only; not entrances or walking-route geometry.
 for(const [name,lat,lon] of [['西湖',25.0821,121.5672],['港墘',25.0800,121.5751]]){const p=node('div');p.append(node('b','捷運'+name+'站'),node('p',`${metro.month} · 07–10 時進站且以本站為目的地`),node('p',fmt(metro.target_means[name])+' 人次／週一至週五平均'),node('small','站中心概略位置；非出入口。未排除國定假日，非即時乘載率。'));L.marker([lat,lon],{icon:L.divIcon({className:'metro-marker',html:'M',iconSize:[25,25]}),alt:'捷運'+name}).bindPopup(p).bindTooltip('捷運'+name).addTo(metroLayer);}}
-async function load(){const button=$('refresh');button.disabled=true;try{const res=await fetch('./data/dashboard.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('快照讀取失敗（HTTP '+res.status+'）');const next=await res.json();if(next.schema_version!==1||!next.frames?.length)throw Error('快照格式不符');data=next;if(mode==='latest'){index=data.frames.length-1;$('observation-date').value=taipeiParts(frameTime(data.frames[index])).day;$('period').value='all';}else{const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames.at(-1)):-1;}render();renderBus();}catch(e){$('error').hidden=false;$('error').textContent=e.message+'；請稍後重新讀取。';$('freshness').textContent='讀取失敗';}finally{button.disabled=false;}}
+function rebuildFrames(){
+ if(!data)return;const selected=selectedFrame();data.frames=combineFrames(recentFrames,[...archives.values()].flat());
+ index=mode==='latest'?latestIndex():selected?data.frames.indexOf(selected):-1;
+}
+async function readHistoryIndex(){
+ const res=await fetch('./data/history/index.json');if(!res.ok)throw Error('歷史索引讀取失敗（HTTP '+res.status+'）');
+ const manifest=await res.json();if(manifest.schema_version!==1||!Array.isArray(manifest.days))throw Error('歷史索引格式不符');
+ historyIndex=manifest;historyReady=true;
+ const select=$('archive-day');select.replaceChildren(node('option','選擇已存入 GitHub 的日期'));select.firstChild.value='';
+ for(const entry of [...manifest.days].reverse()){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(entry.day)||entry.file!==entry.day+'.json')throw Error('歷史檔名稱不符');
+  const option=node('option',`${entry.day} · ${entry.frames} 筆快照 · ${(entry.bytes/1000000).toFixed(2)} MB`);option.value=entry.day;select.append(option);
+ }
+ $('archive-status').textContent=manifest.days.length?`${manifest.days.length} 天歷史已存入 GitHub；選日期才下載當日檔案。`:'尚無已提交的歷史檔案。';
+}
+async function ensureDay(day){
+ if(archives.has(day))return;
+ if(archiveRequests.has(day))return archiveRequests.get(day);
+ const entry=historyIndex.days.find(d=>d.day===day);if(!entry)return;
+ const request=(async()=>{
+  const res=await fetch('./data/history/'+entry.file);if(!res.ok)throw Error('歷史資料讀取失敗（HTTP '+res.status+'）');
+  const buffer=await res.arrayBuffer();if(buffer.byteLength!==entry.bytes)throw Error('歷史檔大小與索引不符');
+  const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',buffer))].map(n=>n.toString(16).padStart(2,'0')).join('');
+  if(hash!==entry.sha256)throw Error('歷史檔校驗失敗，請重新整理');
+  const archive=JSON.parse(new TextDecoder().decode(buffer));if(archive.day!==day)throw Error('歷史檔日期不符');
+  archives.set(day,decodeArchive(archive));rebuildFrames();
+ })();archiveRequests.set(day,request);
+ try{await request;}finally{archiveRequests.delete(day);}
+}
+async function load(){
+ const button=$('refresh');button.disabled=true;
+ try{
+  const res=await fetch('./data/dashboard.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('快照讀取失敗（HTTP '+res.status+'）');
+  const next=await res.json();if(next.schema_version!==1||!next.frames?.length)throw Error('快照格式不符');
+  data=next;recentFrames=next.frames;rebuildFrames();
+  if(mode==='latest'){index=latestIndex();$('observation-date').value=taipeiParts(data.current.road.timestamp||data.current.captured_at).day;$('period').value='all';}
+  else{const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames.at(-1)):-1;}
+  render();renderBus();
+  try{if(!historyReady)await readHistoryIndex();await ensureDay(previousDay(today()));if(mode==='period')await ensureDay($('observation-date').value);if(mode==='period'&&index<0){const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames[0]):-1;}render();}
+  catch(e){$('archive-status').textContent=e.message+'；未取得歷史資料，請重試。';}
+ }catch(e){$('error').hidden=false;$('error').textContent=e.message+'；請稍後重新讀取。';$('freshness').textContent='讀取失敗';}
+ finally{button.disabled=false;}
+}
 function updateLayers(){
  const enabled=$('show-road').checked,display=$('display').value;
  for(const [layer,show] of [[heatLayer,enabled&&display!=='points'],[roadLayer,enabled&&display!=='heat']]){if(show)layer.addTo(map);else map.removeLayer(layer);}
 }
 function stopPlay(){clearInterval(playTimer);playTimer=null;$('play').textContent='▶ 逐筆播放';}
-function latest(){stopPlay();mode='latest';if(data){index=data.frames.length-1;$('observation-date').value=taipeiParts(frameTime(data.frames[index])).day;$('period').value='all';render();}}
-function choosePeriod(day,period){stopPlay();mode='period';$('observation-date').value=day;$('period').value=period;if(data){const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames[0]):-1;render();}}
+function latest(){stopPlay();mode='latest';if(data){index=latestIndex();$('observation-date').value=taipeiParts(frameTime(data.frames[index])).day;$('period').value='all';render();}}
+async function choosePeriod(day,period){
+ stopPlay();const request=++selectionRequest;mode='period';$('observation-date').value=day;$('period').value=period;
+ if(!data)return;index=-1;render();
+ const entry=historyIndex.days.find(d=>d.day===day);$('archive-download').hidden=!entry;
+ if(entry){$('archive-download').href='./data/history/'+entry.file;$('archive-status').textContent='讀取 '+day+' 歷史觀測…';}
+ try{await ensureDay(day);if(request!==selectionRequest||mode!=='period')return;
+  const frames=chosenFrames();index=frames.length?data.frames.indexOf(frames[0]):-1;render();
+  $('archive-status').textContent=entry?`${day} · TDX 實測快照已載入，${entry.sensors} 個方向觀測位置；非完整道路覆蓋。`:'選定日期沒有已提交的歷史檔；仍可查看已累積快照。';
+ }catch(e){if(request===selectionRequest){$('archive-status').textContent=e.message+'；請重新選取日期重試。';}}
+}
 function stepFrame(delta){const frames=chosenFrames();if(!frames.length){stopPlay();return;}const at=frames.indexOf(selectedFrame());const next=at+delta;if(next<0||next>=frames.length){stopPlay();return;}mode='period';index=data.frames.indexOf(frames[next]);render();}
 function renderComparison(){const dates=[['compare-pm',previousDay(today()),'pm','昨天下班'],['compare-am',today(),'am','今天上班']];const summaries=[];
  for(const [id,day,period,label] of dates){const summary=summarizePeriod(data.frames,day,period,currentFilters());summaries.push(summary);const root=$(id);root.replaceChildren();root.append(node('b',label+' · '+day),node('span',PERIODS[period].label),node('strong',summary.slowShare===null?'尚無觀測':Math.round(summary.slowShare*100)+'%'),node('small',summary.slowShare===null?'不能判斷塞車程度':`低速觀測平均占比 · ${summary.covered}/${summary.expected} 個時段有有效資料`));root.classList.toggle('no-data',summary.covered===0);root.onclick=()=>choosePeriod(day,period);}
@@ -79,10 +135,11 @@ function renderPeriodControls(){
  if(bin.slowShare!==null){const bar=node('span',undefined,'time-bin-fill');bar.style.height=Math.max(3,bin.slowShare*100)+'%';bar.style.background=bin.hotShare>0?'#da6250':bin.slowShare>0?'#dba33d':'#359680';button.append(bar);}button.append(node('small',time));button.onclick=()=>{stopPlay();mode='period';index=data.frames.indexOf(bin.frames[0]);render();};timeline.append(button);}
  const select=$('snapshot-select');select.replaceChildren();for(const frame of frames){const option=node('option',clock(frameTime(frame))+(frame.road.error?' · 讀取失敗':''));option.value=data.frames.indexOf(frame);select.append(option);}if(!frames.length){const empty=node('option','這個時段沒有資料');empty.value='-1';select.append(empty);}select.disabled=!frames.length;select.value=index;
  const at=frames.indexOf(selectedFrame());$('previous-frame').disabled=at<=0;$('next-frame').disabled=at<0||at>=frames.length-1;$('play').disabled=frames.length<2;
- const next=frames[at+1];$('gap-note').textContent=next&&selectedFrame()?`下一筆 ${clock(frameTime(next))}，相隔 ${Math.round((Date.parse(frameTime(next))-Date.parse(frameTime(selectedFrame())))/60000)} 分鐘。播放只切換已取得的快照，不補中間車況。`:'逐筆播放僅顯示實測快照；沒有觀測的昨晚／今早，無法事後從即時 API 還原。';
+ const next=frames[at+1];$('gap-note').textContent=next&&selectedFrame()?`下一筆 ${clock(frameTime(next))}，相隔 ${Math.round((Date.parse(frameTime(next))-Date.parse(frameTime(selectedFrame())))/60000)} 分鐘。播放只切換已取得的快照，不補中間車況。`:'逐筆播放僅顯示實測快照；TDX 可回補至昨天的市區歷史，今天的完整歷史需等待隔日更新。';
  renderComparison();
 }
 for(const id of ['corridor','direction','metric','display'])$(id).onchange=render;$('search').oninput=render;
+$('archive-day').onchange=e=>{if(e.target.value)choosePeriod(e.target.value,'am');};
 $('observation-date').onchange=()=>choosePeriod($('observation-date').value,$('period').value);$('period').onchange=()=>choosePeriod($('observation-date').value,$('period').value);
 $('today-am').onclick=()=>choosePeriod(today(),'am');$('yesterday-pm').onclick=()=>choosePeriod(previousDay(today()),'pm');$('view-latest').onclick=latest;$('latest').onclick=latest;
 $('snapshot-select').onchange=e=>{stopPlay();mode='period';index=Number(e.target.value);render();};$('previous-frame').onclick=()=>{stopPlay();stepFrame(-1);};$('next-frame').onclick=()=>{stopPlay();stepFrame(1);};

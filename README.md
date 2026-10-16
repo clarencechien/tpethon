@@ -21,7 +21,7 @@ Leaflet 1.9.4 已以 npm SHA-512 integrity 驗證後存入 `static/vendor/leafle
 
 判讀採方向別 LinkID，不把同一 VD 不同方向混平均；空車道零車速不當壅塞；低速 <20 km/h 且占有率 ≥25% 列為待查熱點，這是未校正的探索門檻。單一快照不證明持續排隊；歷史證據僅報前一小時有效／符合門檻的離散觀測次數。各方向同位置的圖示只做螢幕像素偏移，資料座標不改動。歷史道路回放不會把最新公車 ETA 偽裝成歷史資料。
 
-額外測試：`node --test tests/map_logic.test.mjs`；瀏覽器整合測試 `python tests/pages_smoke.py`（先建置並在 port 8001 提供 `_site`）。
+額外測試：`node --test tests/*.test.mjs`；瀏覽器整合測試 `python tests/pages_smoke.py`（先建置並在 port 8001 提供 `_site`）。
 
 快速 Actual dashboard：Python 3.12+ 標準函式庫後端、原生 HTML/CSS/JS，無 npm／pip 執行期相依套件。
 
@@ -54,7 +54,7 @@ python metro.py
 
 程式從官方索引尋找最新月份，以 HTTPS 串流讀取 `tcgmetro.blob.core.windows.net` 的實際 CSV；保留選定文湖線站點、平日、07/08/09 三個整點時段。OD 的時段是進站時間，「以本站為目的地」不能解讀成該小時實際出站人次。09–10 時保留原始粒度，不虛構 09–09:30 運量。轉乘站的 OD 是站級資料，不足以判斷實際使用哪條線。月資料與即時車流有不同日期，畫面分開標示。`local-data/metro.json` 是可保留的衍生資料，未納入 Git；完整原始月檔不落盤。
 
-所需網域：`tcgbusfs.blob.core.windows.net`、`data.taipei`、`tcgmetro.blob.core.windows.net`。目前公開來源不需金鑰；TDX 尚未啟用，不需填入 TDX 憑證。
+所需網域：`tcgbusfs.blob.core.windows.net`、`data.taipei`、`tcgmetro.blob.core.windows.net`。即時公開來源不需金鑰；TDX 歷史回補使用環境變數 `tdxid` / `tdxsec`（或 `TDX_CLIENT_ID` / `TDX_CLIENT_SECRET`），不會放進 Pages。
 
 ## 匯入歷史資料
 
@@ -96,7 +96,7 @@ node --check static/app.js
 
 逐筆播放只切換已取得的來源時間，明示相鄰快照時間差；中間缺口不補車況。最新已發布快照與歷史回放分開判讀：歷史觀測以當時擷取時間檢查有效性，最新快照依目前時間判斷過期。
 
-**2026-10-16 開始的觀測沒有涵蓋 10/15 下班與 10/16 07:00–09:30，因此目前無法回放這兩個時段。** 更新介面不會創造過去資料；必須持續累積或取得另外的官方歷史資料，才能比較後續上下班。
+**已回補並提交 2026-10-15 的 TDX 內湖 VD 歷史**：約 592 KB、95 個整點快照、230 個方向位置，可回放昨天下班及昨天上班。2026-10-16 早上仍沒有已取得的完整市區歷史，需等 TDX 隔日發布。每日檔、大小、框架選擇與重現方式見 [GitHub 歷史資料說明](data/README.md)。
 
 ## 交通分析研究與更多資料
 

@@ -2,3 +2,7 @@ __pycache__/
 local-data/
 .pytest_cache/
 _site/
+
+.env
+.env.*
+!.env.example

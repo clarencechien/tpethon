@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "days": [
+    {
+      "day": "2026-10-15",
+      "file": "2026-10-15.json",
+      "bytes": 592381,
+      "gzip_bytes": 106096,
+      "sha256": "d3d7eba21e6137568292dd038b70d9ec6eedccf07f0b52fcdd251e7f0b228547",
+      "frames": 95,
+      "sensors": 230,
+      "observations": 21850,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    }
+  ]
+}
