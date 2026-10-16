@@ -1,5 +1,28 @@
 # 內湖交通觀測站
 
+公開網站：**https://clarencechien.github.io/tpethon/**
+
+首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
+
+```sh
+python scripts/build_pages.py --history
+python app.py
+```
+
+`_site/` 是靜態網站輸出；也可用 `python -m http.server 8000 --directory _site` 啟動。`python app.py` 優先提供已建好的 `_site`，並保留 `/legacy.html` 的舊 CSV 匯入 dashboard 與 API。
+
+## GitHub Pages 與更新
+
+`.github/workflows/pages.yml` 在 main 推送、手動執行及每小時第 7、22、37、52 分啟動：測試 → 擷取公開交通資料 → 保留前次公開網站的歷史 → 建置 → Pages 部署。需要將 Pages Source 設為 GitHub Actions，工作流程具 pages:write、id-token:write；公開資料不需額外 API 金鑰。
+
+GitHub 排程可能延遲、停用或失敗，不是有 SLA 的即時服務。網頁每五分鐘重新讀取已發布快照，每分鐘重算過期狀態；重新讀取不會即時呼叫政府 API。超過 10 分鐘的道路／公車資料明確標為過期。歷史最多保留 7 天且不超過 336 筆（15 分鐘採樣約 3.5 天），依來源時間去重；失敗擷取保留缺口。首次可用 `--seed-archive local-data/research` 匯入已有實測快照；若前次網站不可讀取，建置記錄警告並重新開始歷史，不虛構資料。
+
+Leaflet 1.9.4 已以 npm SHA-512 integrity 驗證後存入 `static/vendor/leaflet`，保留原授權。OSM 使用標準 `tile.openstreetmap.org` 圖磚及可見署名，不預抓整區圖磚；流量增大時須依 [OSM Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) 使用合適供應商。圖磚失敗顯示警告，不隱藏觀測資料。捷運圖示為站中心概略位置，非出入口／步行路徑。
+
+判讀採方向別 LinkID，不把同一 VD 不同方向混平均；空車道零車速不當壅塞；低速 <20 km/h 且占有率 ≥25% 列為待查熱點，這是未校正的探索門檻。單一快照不證明持續排隊；歷史證據僅報前一小時有效／符合門檻的離散觀測次數。各方向同位置的圖示只做螢幕像素偏移，資料座標不改動。歷史道路回放不會把最新公車 ETA 偽裝成歷史資料。
+
+額外測試：`node --test tests/map_logic.test.mjs`；瀏覽器整合測試 `python tests/pages_smoke.py`（先建置並在 port 8001 提供 `_site`）。
+
 快速 Actual dashboard：Python 3.12+ 標準函式庫後端、原生 HTML/CSS/JS，無 npm／pip 執行期相依套件。
 
 ## 啟動

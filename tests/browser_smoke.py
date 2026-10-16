@@ -10,7 +10,7 @@ try:
         page=browser.new_page(viewport={'width':1440,'height':1000})
         errors=[]
         page.on('pageerror',lambda e:errors.append(str(e)))
-        page.goto('http://127.0.0.1:8000')
+        page.goto('http://127.0.0.1:8000/legacy.html')
         page.wait_for_function("document.querySelector('#live-roads').children.length>0",timeout=45000)
         page.wait_for_function("document.querySelector('#metro-rows').children.length>0")
         assert page.locator('#metro-date option').count()>0

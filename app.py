@@ -59,7 +59,7 @@ def parse_csv(text):
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=str(ROOT / 'static'), **kwargs)
+        super().__init__(*args, directory=str(ROOT / '_site' if (ROOT / '_site' / 'index.html').exists() else ROOT / 'static'), **kwargs)
 
     def respond(self, data, status=200):
         body = json.dumps(data, ensure_ascii=False).encode()
@@ -80,6 +80,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self.respond(json.loads(path.read_text()) if path.exists() else [])
         if self.path == '/api/health':
             return self.respond({'status': 'ok'})
+        if self.path.split("?", 1)[0] in ("/legacy.html", "/app.js", "/style.css"):
+            self.directory = str(ROOT / "static")
         return super().do_GET()
 
     def do_POST(self):
