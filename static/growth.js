@@ -14,7 +14,7 @@ function chart(id,labels,lines,unit){
   let pen=false;const path=line.values.map((value,i)=>{if(!Number.isFinite(value)){pen=false;return '';}const cmd=pen?'L':'M';pen=true;return `${cmd}${x(i)},${y(value)}`;}).join(' ');
   return `<path d="${path}" fill="none" stroke="${line.color}" stroke-width="2.5"/>`+line.values.map((value,i)=>Number.isFinite(value)?`<circle cx="${x(i)}" cy="${y(value)}" r="3" fill="${line.color}"><title>${escape(labels[i])} · ${escape(line.name)}：${fmt(value,2)}</title></circle>`:'').join('');
  }).join('');
- $(id).innerHTML=`<svg viewBox="0 0 660 285" role="img" aria-label="${escape(unit)}"><g fill="#4b6560" font-size="12"><text x="65" y="20">${escape(unit)}</text>${grid}${ticks}</g>${paths}<g font-size="12">${lines.map((line,i)=>`<text x="${65+i*270}" y="271" fill="${line.color}">${escape(line.name)}</text>`).join('')}</g></svg>`;
+ $(id).innerHTML=`<svg viewBox="0 0 660 285" role="img" aria-label="${escape(unit)}"><g fill="#4b6560" font-size="16"><text x="65" y="20">${escape(unit)}</text>${grid}${ticks}</g>${paths}<g font-size="16">${lines.map((line,i)=>`<text x="${65+i*270}" y="271" fill="${line.color}">${escape(line.name)}</text>`).join('')}</g></svg>`;
 }
 
 function fillProfiles(){

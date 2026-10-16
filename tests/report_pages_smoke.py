@@ -16,12 +16,30 @@ with sync_playwright() as p:
  assert page.locator('#historical-date').inner_text()=='2026-10-15'
  assert '18,838' in page.locator('#metro-evidence').inner_text()
  assert page.locator('#hotspot-list article').count()>0
- assert '32 輛出勤' in page.locator('#outcome-takeaway').inner_text()
+ assert '32 輛出勤' in page.locator('#outcome-takeaway').text_content()
+ # Default scenario, conservation and an adverse scenario must all be understandable.
+ assert '減少 53%' in page.locator('#comparison-verdict').inner_text()
+ assert '32 輛出勤' in page.locator('#comparison-verdict').inner_text()
+ assert '12,000 人' in page.locator('#people-accounting').inner_text()
+ assert '3,500 人' in page.locator('#people-accounting').inner_text()
+ assert page.locator('#comparison-charts article').count()==4
+ assert page.locator('#annual-chart article').count()==5
+ assert page.locator('#weekly-chart .metric-row').count()==4
+ # Keyboard operation must update results, including cases that worsen traffic.
+ slider=page.locator('#report-conversion');slider.focus();slider.press('Home')
+ assert page.locator('#conversion-value').inner_text()=='0%'
+ assert '反而更塞' in page.locator('#comparison-verdict').inner_text()
+ assert '0 人。加上' in page.locator('#people-accounting').inner_text()
+ slider.press('ArrowRight')
+ assert page.locator('#conversion-value').inner_text()=='5%'
+ slider.fill('50');slider.dispatch_event('input')
+ assert '減少 53%' in page.locator('#comparison-verdict').inner_text()
  page.locator('#report-year').select_option('4')
  assert '10,824' in page.locator('#growth-note').inner_text()
  page.locator('#reload-report').click()
  page.wait_for_function("!document.querySelector('#reload-report').disabled")
  assert page.locator('#report-year').input_value()=='4'
+ assert page.locator('#report-conversion').input_value()=='50'
  page.screenshot(path='/tmp/neihu-report-desktop.png',full_page=True)
  page.set_viewport_size({'width':390,'height':844})
  assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
@@ -40,8 +58,17 @@ with sync_playwright() as p:
  missing=browser.new_page();missing.route('**/data/dashboard.json',lambda r:r.fulfill(status=503,body='unavailable'));missing.route('**/data/metro.json',lambda r:r.fulfill(status=503,body='unavailable'))
  missing.goto('http://127.0.0.1:8001/')
  missing.wait_for_function("document.querySelector('#morning-coverage').textContent==='未知'")
+ assert missing.locator('#metro-total').inner_text()=='未知'
  assert '平均人次未知' in missing.locator('#metro-evidence').inner_text()
  assert missing.locator('#outcome-rows tr').count()==5
+ # Large text and mobile navigation across the shared stylesheet's five consumers.
+ for path in ['', 'map.html', 'plan.html', 'simulation.html', 'brt.html']:
+  page.goto('http://127.0.0.1:8001/'+path)
+  page.wait_for_load_state('networkidle')
+  assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),path
+  assert page.evaluate('parseFloat(getComputedStyle(document.querySelector("p")).fontSize)>=20'),path
+  assert page.evaluate('parseFloat(getComputedStyle(document.querySelector(".fine")).fontSize)>=16'),path
+  assert page.locator('nav').get_by_text('快速公車試算',exact=True).is_visible(),path
  assert not errors,errors
  print('PASS: report evidence, unknown vs missing, no scheduled run, growth assumptions, map navigation, desktop/mobile.')
  browser.close()

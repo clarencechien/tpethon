@@ -26,7 +26,7 @@ with sync_playwright() as p:
     page.locator('#b-fleet').fill('0')
     page.wait_for_function("document.querySelector('#verdict').textContent.includes('尚未清空')")
     assert '等車輛返回' in page.locator('#capacity').inner_text()
-    page.locator('#b-fleet').fill('40');page.locator('summary').click();page.locator('#b-lanes').fill('2')
+    page.locator('#b-fleet').fill('40');page.get_by_text('車道、站點、路口與營運細節',exact=True).click();page.locator('#b-lanes').fill('2')
     page.wait_for_function("document.querySelector('#verdict').textContent.includes('無法同時保留')")
     page.locator('#b-lanes').fill('3');page.locator('#b-people').fill('')
     page.wait_for_function("document.querySelector('#results').hidden")

@@ -1,10 +1,10 @@
 import {brtDefaults,brtVersion,brtScenarios,conversionScan,transitionYears} from './brt_logic.js';
 import {profileWeights} from './growth_logic.js';
 const $=id=>document.getElementById(id),fmt=(v,d=0)=>v===null?'—':Number(v).toLocaleString('zh-TW',{maximumFractionDigits:d});
-const names={before:'施工前參考',construction:'僅施工',mixed:'施工＋混流加班車',brt:'施工＋完整 BRT'},colors={before:'#87948e',construction:'#be662c',mixed:'#7655b3',brt:'#117d69'};
+const names={before:'同年不施工（假設）',construction:'施工・維持原服務',mixed:'施工＋加開一般公車',brt:'施工＋快速公車'},colors={before:'#87948e',construction:'#be662c',mixed:'#7655b3',brt:'#117d69'};
 const el=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;return e;};
 const fields=[
- ['people','基期私車使用者（人／尖峰）',0,100000,100],['existingBusPeople','基期既有公車乘客（人／尖峰）',0,50000,100],['conversion','主通道私車轉乘率（%）',0,100,1,100],['growth','需求年成長率（%）',-10,10,.1,100],['years','通車前模擬年數',1,15,1],['year','檢視基期後第幾年',0,14,1],['headway','加班車／BRT 班距（分）',.5,15,.5],['fleet','可出勤車輛（輛）',0,200,1],
+ ['people','起始年的私車使用者（人／尖峰）',0,100000,100],['existingBusPeople','起始年的既有公車乘客（人／尖峰）',0,50000,100],['conversion','主要道路的私車使用者，有幾成改搭（%）',0,100,1,100],['growth','需求年成長率（%）',-10,10,.1,100],['years','通車前模擬年數',1,15,1],['year','檢視開始施工後第幾年',0,14,1],['headway','加班車／BRT 班距（分）',.5,15,.5],['fleet','可出勤車輛（輛）',0,200,1],
  ['lanes','原有主通道單向車道數',1,6,1],['workLanes','施工占用車道數',0,5,1],['laneCapacity','每車道可用容量（PCU／時）',200,2500,50],['workFactor','施工剩餘容量係數（%）',30,100,1,100],['outerCapacity','外圍可用容量（PCU／時）',50,15000,50],['innerShare','私車原走主通道比例（%）',0,100,1,100],['occupancy','私車平均載客（人／車）',1,10,.1],['diversion','剩餘主通道私車改道（%）',0,80,1,100],['seats','公車每班額定載客（人）',10,250,1],['load','可用載客率（%）',10,100,1,100],['existingHeadway','既有公車班距（分）',1,30,.5],['reserve','額外備車比例（%）',0,100,1,100],['busPCU','混流公車小客車當量',1,5,.1],['distance','BRT 單程里程（公里）',1,30,.5],['cruiseSpeed','BRT 非停站行駛速度（km/h）',10,60,1],['stops','單程停站數',0,40,1],['dwellSeconds','BRT 每站停靠（秒）',5,180,1],['clearanceSeconds','單站清空間隔（秒）',5,120,1],['signals','單程路口數',0,50,1],['signalSeconds','優先號誌後每路口延誤（秒）',0,120,1],['recoveryMinutes','每循環折返恢復（分）',0,120,1],['restMinutes','每循環駕駛休息（分）',0,120,1],['mixedCycle','混流公車循環時間（分）',10,480,1],['mixedDwellSeconds','混流公車每站停靠（秒）',5,180,1]];
 for(const [i,[key,label,min,max,step,scale=1]] of fields.entries()){
  const l=el('label',label),input=el('input','');Object.assign(input,{id:`b-${key}`,type:'number',min,max,step,value:brtDefaults[key]*scale,required:true});l.append(input);$(i<8?'basic':'advanced').append(l);
@@ -13,12 +13,12 @@ let profiles=[],descriptor=null,profileError='實測型態載入中',report=null
 const time=m=>`${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(Math.floor(m%60)).padStart(2,'0')}`;
 function fillProfiles(){const select=$('profile'),previous=select.value,candidates=profiles.filter(p=>p.period===$('period').value);select.replaceChildren();for(const p of candidates){const o=el('option',`${p.name} ${p.direction} · ${p.sensor_id} · ${p.days.length} 天`);o.value=p.id;select.append(o);}const preferred=candidates.find(p=>p.id===previous)||candidates.find(p=>p.name==='堤頂大道'&&p.direction==='N')||candidates[0];if(preferred)select.value=preferred.id;else select.append(el('option',profileError||'此時段無完整型態'));}
 function chart(id,labels,lines,unit){
- const max=Math.max(1,...lines.flatMap(l=>l.values.filter(Number.isFinite)))*1.08,x=i=>65+i/Math.max(1,labels.length-1)*510,y=v=>205-165*v/max;
+ const max=Math.max(1,...lines.flatMap(l=>l.values.filter(Number.isFinite)))*1.08,x=i=>90+i/Math.max(1,labels.length-1)*485,y=v=>205-165*v/max;
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 610 260');svg.setAttribute('role','img');svg.setAttribute('aria-label',unit);
  function node(tag,attrs,text){const e=document.createElementNS(svg.namespaceURI,tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;svg.append(e);return e;}
- node('text',{x:65,y:18,'font-size':12,fill:'#466357'},unit);
- for(let i=0;i<4;i++){const v=max*i/3;node('line',{x1:65,x2:575,y1:y(v),y2:y(v),stroke:'#d9e3dd'});node('text',{x:58,y:y(v)+4,'text-anchor':'end','font-size':11},fmt(v));}
- for(const [i,label]of labels.entries())if(i%Math.ceil(labels.length/7)===0||i===labels.length-1)node('text',{x:x(i),y:233,'text-anchor':'middle','font-size':11},label);
+ node('text',{x:90,y:20,'font-size':16,fill:'#466357'},unit);
+ for(let i=0;i<4;i++){const v=max*i/3;node('line',{x1:90,x2:575,y1:y(v),y2:y(v),stroke:'#d9e3dd'});node('text',{x:83,y:y(v)+4,'text-anchor':'end','font-size':16},fmt(v));}
+ for(const [i,label]of labels.entries())if(i%Math.ceil(labels.length/7)===0||i===labels.length-1)node('text',{x:x(i),y:233,'text-anchor':'middle','font-size':16},label);
  for(const line of lines){let pen=false;const path=line.values.map((v,i)=>{if(!Number.isFinite(v)){pen=false;return '';}const command=pen?'L':'M';pen=true;return `${command}${x(i)},${y(v)}`;}).join(' ');node('path',{d:path,stroke:colors[line.mode],fill:'none','stroke-width':2.5});if(labels.length<16)line.values.forEach((v,i)=>{if(Number.isFinite(v))node('circle',{cx:x(i),cy:y(v),r:3,fill:colors[line.mode]});});}
  $(id).replaceChildren(svg);
 }
