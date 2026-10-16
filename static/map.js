@@ -1,3 +1,4 @@
+import {dataAvailability,scheduleMessage} from './availability.js';
 import {decodeArchive,combineFrames} from './history.js';
 import {classify,filtered,repeatedEvidence,color,PERIODS,taipeiParts,previousDay,frameTime,periodFrames,summarizePeriod,heatCells} from './logic.js';
 const $=id=>document.getElementById(id);
@@ -123,6 +124,7 @@ function renderComparison(){const dates=[['compare-pm',previousDay(today()),'pm'
  $('comparison-note').textContent=summaries.every(s=>s.coverage>=.8)?'兩時段各有至少 80% 時間格觀測；比例描述所選走廊／方向的有效感測器，不代表道路面積或延誤分鐘。上下班方向與需求不同，不直接判定政策效果。':'目前資料不足，不能比較昨天下班與今天上班誰更塞。缺資料不是 0% 塞車；至少需各時段八成時間格有有效觀測，並核對道路方向。';
 }
 function renderPeriodControls(){
+ const availability=dataAvailability(data);$('data-status-note').textContent=availability.reason;$('schedule-status').textContent=scheduleMessage(data.collection_status);
  const frames=chosenFrames(),day=$('observation-date').value,period=$('period').value;const summary=summarizePeriod(data.frames,day,period,currentFilters());
  $('view-latest').classList.toggle('active',mode==='latest');$('today-am').classList.toggle('active',mode==='period'&&day===today()&&period==='am');$('yesterday-pm').classList.toggle('active',mode==='period'&&day===previousDay(today())&&period==='pm');
  $('selection-note').textContent=mode==='latest'?'現在只看最新發布的一次觀測；不代表早上或下班時段。':!frames.length?'此時段尚未取得觀測；無法回放，也不能說不塞。':`${PERIODS[period].label}：${summary.covered}/${summary.expected} 個 15 分鐘格有有效觀測，未觀測時段不補值。`;
@@ -148,6 +150,6 @@ $('fit').onclick=()=>map.fitBounds(bounds);$('refresh').onclick=()=>{stopPlay();
 for(const [id,layer] of [['show-bus',busLayer],['show-metro',metroLayer]])$(id).onchange=()=>$(id).checked?layer.addTo(map):map.removeLayer(layer);
 fetch('./data/metro.json').then(r=>{if(!r.ok)throw Error('捷運歷史資料讀取失敗');return r.json();}).then(d=>{metro=d;renderMetro();}).catch(e=>$('metro-period').textContent=e.message);
 new ResizeObserver(()=>map.invalidateSize()).observe($('map'));
-load();setInterval(()=>{if(!document.hidden&&data){render();renderBus();}},60000);
+load().then(()=>{const view=new URLSearchParams(location.search).get('view');if(view==='today-am')return choosePeriod(today(),'am');if(view==='yesterday-pm')return choosePeriod(previousDay(today()),'pm');});setInterval(()=>{if(!document.hidden&&data){render();renderBus();}},60000);
 
 setInterval(()=>{if(!document.hidden&&!historical())load();},300000);

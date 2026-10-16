@@ -19,7 +19,7 @@ with sync_playwright() as p:
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.route('**/data/history/index.json',lambda route:route.fulfill(status=200,content_type='application/json',body=json.dumps({'schema_version':1,'days':[]})))
     page.route('**/data/dashboard.json*',lambda route:route.fulfill(status=200,content_type='application/json',body=json.dumps(fixture)))
-    page.goto('http://127.0.0.1:8001')
+    page.goto('http://127.0.0.1:8001/map.html')
     page.wait_for_function("document.querySelector('#stat-valid').textContent.includes('/')")
     assert page.locator('#display').input_value()=='heat'
     assert page.locator('.leaflet-overlay-pane path').count()>0

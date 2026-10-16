@@ -1,5 +1,10 @@
 # 內湖交通觀測站
 
+先讀 [整體報告：問題、方案、假設與預期效果](docs/REPORT.md)，或開啟 [總覽儀表板](https://clarencechien.github.io/tpethon/)。[現況地圖／晨晚峰回放](https://clarencechien.github.io/tpethon/map.html) 為獨立頁面。
+
+今日回放依賴當時保存的即時快照；TDX 歷史僅支援過去日期。首頁會核對實際排程紀錄；設定 cron 不代表已擷取成功。半日更新同步發布兩週摘要與同期間逐日回放。
+
+
 公開網站：**https://clarencechien.github.io/tpethon/**
 
 首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。

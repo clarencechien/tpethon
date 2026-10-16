@@ -2,6 +2,126 @@
   "schema_version": 1,
   "days": [
     {
+      "day": "2026-10-05",
+      "file": "2026-10-05.json",
+      "bytes": 603874,
+      "gzip_bytes": 104299,
+      "sha256": "eeccb2568d0de6e09ef5cda0393696de6b6af04291e637f4e5465f3efec79ea4",
+      "frames": 96,
+      "sensors": 232,
+      "observations": 22272,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-06",
+      "file": "2026-10-06.json",
+      "bytes": 598625,
+      "gzip_bytes": 105766,
+      "sha256": "088b6579f2609ef296b5183b7a43b332a5a0d790c7a690d010d45f7bf7a360d6",
+      "frames": 96,
+      "sensors": 231,
+      "observations": 22074,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-07",
+      "file": "2026-10-07.json",
+      "bytes": 595644,
+      "gzip_bytes": 105246,
+      "sha256": "a66a228703fb7f208d382a011b4fcd2feca87ee18c228c063eaaf8ebda13acd1",
+      "frames": 96,
+      "sensors": 229,
+      "observations": 21984,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-08",
+      "file": "2026-10-08.json",
+      "bytes": 596311,
+      "gzip_bytes": 106135,
+      "sha256": "9b209bc2fb204f7bcae1409d36fe524c4054a3545b810477e2790581bf899696",
+      "frames": 96,
+      "sensors": 229,
+      "observations": 21984,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-09",
+      "file": "2026-10-09.json",
+      "bytes": 593312,
+      "gzip_bytes": 102338,
+      "sha256": "1e9f52fbf4e6d31aeb01e3fc575ec5fb5e8724b7a6e7fe560fd1e1b03d7d6d56",
+      "frames": 96,
+      "sensors": 229,
+      "observations": 21984,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-10",
+      "file": "2026-10-10.json",
+      "bytes": 592169,
+      "gzip_bytes": 102214,
+      "sha256": "5810ae68e630217e4c29800f42e06f778889b6dd238a4884c69a4c2cfb6e2c1a",
+      "frames": 96,
+      "sensors": 229,
+      "observations": 21984,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-11",
+      "file": "2026-10-11.json",
+      "bytes": 583841,
+      "gzip_bytes": 98833,
+      "sha256": "3c6e9dbe881ba02ff1d3f8dab51f728c8a847ab476a900f411dc865e6639d4ad",
+      "frames": 96,
+      "sensors": 226,
+      "observations": 21696,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-12",
+      "file": "2026-10-12.json",
+      "bytes": 587182,
+      "gzip_bytes": 103095,
+      "sha256": "fa398204c9b2a36b950484f3d7a9bdd9a2ff18cb2b64e342aa4402e0a5344d08",
+      "frames": 96,
+      "sensors": 226,
+      "observations": 21696,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-13",
+      "file": "2026-10-13.json",
+      "bytes": 576150,
+      "gzip_bytes": 102053,
+      "sha256": "e4b84a3743c937020aba02c443b349171ef76583a2ac22def2aebb8125b47e7b",
+      "frames": 95,
+      "sensors": 224,
+      "observations": 21280,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
+      "day": "2026-10-14",
+      "file": "2026-10-14.json",
+      "bytes": 582223,
+      "gzip_bytes": 103159,
+      "sha256": "b055c0c8d13fa030c55d91fad519c7174ec8e400834c43445df04e3fa94a4cac",
+      "frames": 96,
+      "sensors": 224,
+      "observations": 21504,
+      "source": "TDX Taipei VD",
+      "sampling": "exact_quarter_hour_snapshot"
+    },
+    {
       "day": "2026-10-15",
       "file": "2026-10-15.json",
       "bytes": 592381,
@@ -13,5 +133,9 @@
       "source": "TDX Taipei VD",
       "sampling": "exact_quarter_hour_snapshot"
     }
-  ]
+  ],
+  "as_of": "2026-10-16",
+  "retention": "previous_and_current_iso_week",
+  "latest_available_day": "2026-10-15",
+  "generated_at": "2026-10-16T14:24:44+08:00"
 }

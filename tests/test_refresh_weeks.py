@@ -49,3 +49,25 @@ class RefreshWeeksTests(unittest.TestCase):
             calendar_reference(date(2027, 1, 4), target)
             self.assertEqual([call.args[0].rsplit('/', 1)[-1] for call in request.call_args_list], ['2026.json', '2027.json'])
             self.assertEqual(len(json.loads(target.read_text())['sources']), 2)
+
+class ReplayPublicationTests(unittest.TestCase):
+    def test_rolling_replay_has_verified_files_and_prunes_only_old_days(self):
+        from scripts.refresh_weeks import publish_replay
+        import hashlib
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);raw=root/'raw';raw.mkdir();output=root/'history';output.mkdir()
+            (output/'2026-09-01.json').write_text('{}');(output/'README.md').write_text('keep')
+            for d in completed_days(date(2026,10,16)):
+                payload=day(str(d),[10,40]);payload.update(schema_version=1,sampling='exact_quarter_hour_snapshot',sources={'test':{}})
+                (raw/f'{d}.json').write_text(json.dumps(payload))
+            manifest=publish_replay(date(2026,10,16),raw,output)
+            self.assertEqual(len(manifest['days']),11)
+            self.assertEqual(manifest['latest_available_day'],'2026-10-15')
+            self.assertFalse((output/'2026-09-01.json').exists());self.assertTrue((output/'README.md').exists())
+            for entry in manifest['days']:
+                encoded=(output/entry['file']).read_bytes()
+                self.assertEqual(entry['sha256'],hashlib.sha256(encoded).hexdigest())
+            publish_replay(date(2026,10,16),raw,output)
+            before=(output/'index.json').read_bytes();(raw/'2026-10-15.json').unlink()
+            with self.assertRaises(FileNotFoundError):publish_replay(date(2026,10,16),raw,output)
+            self.assertEqual((output/'index.json').read_bytes(),before)

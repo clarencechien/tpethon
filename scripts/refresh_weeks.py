@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.backfill_tdx import TZ
+from scripts.backfill_tdx import TZ, publish as publish_day
 from scripts.summarize_weeks import build
 from scripts.build_profiles import publish as publish_profiles
 
@@ -72,6 +72,40 @@ def publish_weeks(as_of, archives, output, calendar):
     return manifest
 
 
+def publish_replay(as_of, archives, output):
+    """Publish the same rolling days for map replay, before committing either product."""
+    required = completed_days(as_of)
+    payloads = []
+    for day in required:
+        payload = json.loads((archives / f'{day}.json').read_bytes())
+        if payload.get('day') != str(day) or not payload.get('frames') or not payload.get('sources'):
+            raise ValueError('Invalid replay archive: ' + str(day))
+        previous = output / f'{day}.json'
+        if previous.exists() and json.loads(previous.read_bytes()) != payload:
+            raise ValueError('Existing immutable replay day differs: ' + str(day))
+        payloads.append(payload)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=output.parent) as directory:
+        staging = Path(directory)
+        for payload in payloads:
+            publish_day(payload, staging)
+        manifest = json.loads((staging / 'index.json').read_text())
+        if sum(row['bytes'] for row in manifest['days']) > 20_000_000:
+            raise ValueError('Rolling replay exceeds 20 MB budget')
+        manifest.update(as_of=str(as_of), retention='previous_and_current_iso_week',
+                        latest_available_day=str(required[-1]),
+                        generated_at=datetime.now(TZ).isoformat(timespec='seconds'))
+        (staging / 'index.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
+        output.mkdir(parents=True, exist_ok=True)
+        keep = {entry['file'] for entry in manifest['days']}
+        for name in sorted(keep) + ['index.json']:
+            (staging / name).replace(output / name)
+        for path in output.glob('????-??-??.json'):
+            if path.name not in keep:
+                path.unlink()
+    return manifest
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--as-of', type=date.fromisoformat, default=datetime.now(TZ).date())
@@ -84,6 +118,7 @@ def main():
         calendar = Path(directory) / 'calendar.json'
         calendar_reference(args.as_of, calendar)
         result = publish_weeks(args.as_of, local / 'weekly-history', ROOT / 'data/weeks', calendar)
+        publish_replay(args.as_of, local / 'weekly-history', ROOT / 'data/history')
     print(json.dumps({k: result[k] for k in ('as_of', 'latest_available_day', 'generated_at')}, ensure_ascii=False))
 
 

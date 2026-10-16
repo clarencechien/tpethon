@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from dashboard import collect, parse_roads
+from scripts.schedule_status import collect_status
 
 PREVIOUS_URL='https://clarencechien.github.io/tpethon/data/dashboard.json'
 
@@ -63,7 +64,7 @@ def build(output,with_history=False,seed_archive=None):
                 raise RuntimeError('Cannot safely read previous Pages history; preserve the existing publication and retry later.') from e
     # Never remove a user-supplied output directory or unrelated files.
     output.mkdir(parents=True,exist_ok=True)
-    for name in ('index.html','map.css','map.js','logic.js','history.js','plan.html','plan.js','plan_logic.js','plan.css',
+    for name in ('index.html','map.html','report.css','report.js','availability.js','map.css','map.js','logic.js','history.js','plan.html','plan.js','plan_logic.js','plan.css',
                  'simulation.html','simulation.js','simulation_logic.js','simulation.css','growth.js','growth_logic.js','brt.html','brt.js','brt_logic.js','brt.css'):
         shutil.copy2(ROOT/'static'/name,output/name)
     shutil.copytree(ROOT/'static'/'vendor',output/'vendor',dirs_exist_ok=True)
@@ -72,7 +73,7 @@ def build(output,with_history=False,seed_archive=None):
         source=ROOT/'data'/folder
         if source.exists():shutil.copytree(source,output/'data'/folder,dirs_exist_ok=True)
     snapshot=collect()
-    payload=dict(schema_version=1,generated_at=snapshot['captured_at'],current=snapshot,frames=merge_frames(previous,snapshot))
+    payload=dict(schema_version=1,generated_at=snapshot['captured_at'],current=snapshot,frames=merge_frames(previous,snapshot),collection_status=collect_status())
     (output/'data'/'dashboard.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':')))
     shutil.copy2(ROOT/'docs'/'research'/'metro_od_findings.json',output/'data'/'metro.json')
     (output/'.nojekyll').touch()
