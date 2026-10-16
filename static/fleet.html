@@ -2,7 +2,7 @@
 <body><a class="skip-link" href="#main-content">跳到主要內容</a><header><a class="brand" href="./">內湖交通觀測站</a><nav aria-label="主要導覽"><a href="./">總覽報告</a><a href="map.html">交通地圖</a><a href="plan.html">兩週比較</a><a href="simulation.html">方案試算</a><a href="methods.html">資料與研究</a></nav></header><main id="main-content">
 <section class="intro"><div><div class="eyebrow">E4 · 用 22 天需求測試同一套班表</div><h1>接駁車，遇上人潮還夠嗎？</h1><p>人潮集中、往返變慢，都可能讓原本夠用的車隊不夠用。先看要準備多少車，再從地圖找值得現勘的接駁路段。</p></div></section>
 <nav class="reading-path" aria-label="閱讀順序"><a href="#stress">① 多少車才夠</a><a href="#routes">② 哪裡可以接駁</a><a href="#method">③ 假設與下一步</a></nav>
-<section class="panel" id="stress"><span class="tag actual">真實：逐日捷運人次</span> <span class="tag assumption">假設：接駁需求、到站方式、往返時間</span><h2>每個色塊，都是一組車隊準備方案</h2>
+<p class="assumption-note"><b>44 輛還不是可落地方案：</b>本頁未限制停靠與休息場地。<a href="space.html">看新一輪：車位不足時，能接走多少人？ →</a></p><section class="panel" id="stress"><span class="tag actual">真實：逐日捷運人次</span> <span class="tag assumption">假設：接駁需求、到站方式、往返時間</span><h2>每個色塊，都是一組車隊準備方案</h2>
 <p>沿用 2026 年 9 月的 22 個週一至週五（未排除假日），07–10 時進站、前往西湖與港墘的旅次。兩站各自派車，找出同一套班表能通過全部日期的方案。</p>
 <p class="assumption-note"><b>通過條件：</b>每站 95% 已上車乘客等候不超過 10 分鐘、模擬結束全部上車、沒有因缺車而漏班。這是模型條件，尚未驗證現場服務品質，也不是交通減塞率。</p>
 <label class="fleet-arrival">人潮如何抵達接駁站？<select id="fleet-arrival" disabled><option value="0">每小時均勻抵達</option><option value="3">每 3 分鐘集中抵達一批（假設）</option><option value="6" selected>每 6 分鐘集中抵達一批（假設）</option></select></label>
