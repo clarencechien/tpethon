@@ -1,0 +1,23 @@
+{
+  "checked_on": "2026-10-16",
+  "metro_read_status": "Reused prior official monthly aggregation in local-data/metro.json; station-hour totals reconciled with independently aggregated docs/research/metro_od_findings.json. Did not download the full monthly CSV again.",
+  "volume_standard": {
+    "official_page": "https://tdx.transportdata.tw/standard/traffic",
+    "page_evidence": "https://tdx.transportdata.tw/js/standard-traffic.bb8e61d8.js",
+    "read_status": "Official document links identified; linked PDFs not retrieved or read. Volume interval remains unverified.",
+    "requests": [
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1PaqfOTD1NCyJOwFt3j1Rr4u3ZX7vUsFg",
+        "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1iyBWjQx0eWCo8fXCkIVOl2m4zLOTQ9mB",
+        "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+      }
+    ]
+  },
+  "model_status": {
+    "shuttle": "Uncalibrated station-level FIFO service experiment; real OD entry cohorts plus assumed transfer fraction, arrival timing, route cycles and capacities.",
+    "ramp": "Uncalibrated point queue; normalized passage pattern only. Total arrival demand, capacity and starting queue remain assumptions. No policy effect claim for actual Neihu."
+  }
+}

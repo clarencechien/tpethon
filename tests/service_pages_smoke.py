@@ -1,0 +1,46 @@
+"""E2/E3 controls, unserved passengers, no fake calibration, missing-minute gate."""
+from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    browser=p.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox'])
+    page=browser.new_page(viewport={'width':1440,'height':1050});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+    page.goto('http://127.0.0.1:8001/service.html')
+    page.wait_for_function("document.querySelector('#shuttle-day').disabled===false")
+    assert page.locator('#shuttle-error').is_hidden()
+    assert '414,439' in page.locator('#metro-input-summary').inner_text()
+    assert '28 輛出勤＋4 輛備車' in page.locator('#shuttle-verdict').inner_text()
+    assert '5.5 分鐘' in page.locator('#shuttle-verdict').inner_text()
+    page.locator('#peak-day').click()
+    assert page.locator('#shuttle-day').input_value()=='2026-09-15'
+    assert '13.5 分鐘' in page.locator('#shuttle-verdict').inner_text()
+    assert '港墘：20 輛出勤＋2 輛備車' in page.locator('#shuttle-recommendation').inner_text()
+    page.locator('#shuttle-day').select_option('mean');page.locator('#shuttle-capacity').select_option('20')
+    assert '仍約 1,223 人未上車' in page.locator('#shuttle-verdict').inner_text()
+    page.locator('#shuttle-share').focus();page.keyboard.press('Home')
+    assert '接駁需求為零' in page.locator('#shuttle-verdict').inner_text()
+    assert '0 輛出勤＋0 輛備車' in page.locator('#shuttle-verdict').inner_text()
+    page.locator('#shuttle-share').fill('20');page.locator('#shuttle-share').dispatch_event('input')
+    page.locator('#shuttle-headway').fill('');page.locator('#run-shuttle').click()
+    assert page.locator('#shuttle-error').is_visible();assert page.locator('#shuttle-output').is_hidden()
+    page.locator('#shuttle-headway').fill('3');page.locator('#shuttle-capacity').select_option('60');page.locator('#run-shuttle').click()
+    assert page.locator('#shuttle-output').is_visible()
+    assert page.locator('#ramp-day').input_value()=='2026-10-15'
+    assert '241 / 241' in page.locator('#ramp-input-summary').inner_text()
+    assert '不是實測排隊' in page.locator('#ramp-verdict').inner_text()
+    assert page.locator('#ramp-table tbody tr').count()==6
+    page.locator('#ramp-day').select_option('2026-10-14')
+    assert page.locator('#ramp-error').is_visible();assert page.locator('#ramp-output').is_hidden()
+    page.locator('#ramp-day').select_option('2026-10-15')
+    page.locator('#ramp-capacity').fill('1');page.locator('#run-ramp').click()
+    assert '部分情境結束仍有車未通過' in page.locator('#ramp-verdict').inner_text()
+    page.locator('#ramp-demand').fill('');page.locator('#run-ramp').click()
+    assert '空白不代表零' in page.locator('#ramp-error').inner_text()
+    page.locator('#ramp-demand').fill('3000');page.locator('#ramp-capacity').fill('750');page.locator('#run-ramp').click()
+    for width in [390,1440]:
+        page.set_viewport_size({'width':width,'height':1000})
+        assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
+        page.screenshot(path=f'/tmp/neihu-service-{width}.png',full_page=True)
+    bad=browser.new_page();bad.route('**/data/simulation/service-inputs.json',lambda route:route.fulfill(status=503,body='unavailable'))
+    bad.goto('http://127.0.0.1:8001/service.html');bad.wait_for_selector('#service-error:visible')
+    assert bad.locator('#shuttle-output').is_hidden();assert bad.locator('#ramp-output').is_hidden()
+    assert not errors,errors
+    browser.close();print('PASS: station/day demand, fleet, leftovers, keyboard, validation, ramp missing-data gate and residual queue, mobile layout, fetch failure')
