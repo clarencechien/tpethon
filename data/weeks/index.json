@@ -1,11 +1,5 @@
 {
   "schema_version": 1,
-  "demand_profiles": {
-    "file": "profiles.json",
-    "bytes": 414732,
-    "sha256": "c48de927cc2b582bae33a5d95156b43ddc8adb8b9715778efcb58d2ba6385f00",
-    "count": 386
-  },
   "as_of": "2026-10-16",
   "timezone": "Asia/Taipei",
   "weeks": [
@@ -171,5 +165,11 @@
   ],
   "calendar_verified_official": false,
   "calendar_sha256": "39fa973c8650060f028699745850cb27d43d225837d3e796cf71f022df929a47",
-  "generated_at": "2026-10-16T13:43:18+08:00"
+  "demand_profiles": {
+    "file": "profiles.json",
+    "bytes": 414732,
+    "sha256": "0e321797d681c30ad2603b0cc47eea1dafeecce1c0a06e887a9d58dac46b9da7",
+    "count": 386
+  },
+  "generated_at": "2026-10-16T13:43:35+08:00"
 }
