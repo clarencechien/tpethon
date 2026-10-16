@@ -159,3 +159,9 @@ node --test tests/simulation_logic.test.mjs
 
 
 實測與成長模式已加入同一模擬頁面：選擇單一測站方向、上班／下班型態，調整道路需求年成長、容量年成長、推估年數與獨立捷運旅次成長。圖表及六種政策情境同步更新；基期人次不會被目標年數字覆寫。捷運實測基期為2026-09，VD型態隨兩週摘要更新。年成長率是使用者假設，不是兩週實測估計值；VD統計區間未確認，僅帶入相對型態，未推算尖峰車流總量。[資料方法與限制](docs/SIMULATION_PLAN.md#三之二實測型態與年成長已接入)。
+
+### 完整 BRT 與捷運施工過渡期
+
+[互動 BRT 實驗](https://clarencechien.github.io/tpethon/brt.html) 比較施工、混流加班車與完整 BRT；納入一般車道減少、有限車隊、乘客排隊、實測 VD 相對型態與年成長。研究依據、公式與限制見 [BRT_TRANSITION.md](docs/BRT_TRANSITION.md)。未校正的結果不能視為內湖實測減塞率。
+
+重現：`node scripts/run_brt.mjs`；測試：`node --test tests/brt_logic.test.mjs`。

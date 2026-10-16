@@ -1,0 +1,33 @@
+{
+  "checked_on": "2026-10-16",
+  "publisher": "Institute for Transportation and Development Policy (ITDP)",
+  "source_version": "9d3057044d8201a84d7c35fa67789e4cbcf099a4",
+  "evidence_type": "Published planning guide; historical descriptive cases, not a Neihu causal evaluation",
+  "sources": [
+    {
+      "url": "https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/02-why-brt/01-defining-rapid-transit-modes.manu",
+      "supports": "Five defining BRT elements; cites 2015 standard. Not a 2024 certification."
+    },
+    {
+      "url": "https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/02-why-brt/04-performance.manu",
+      "supports": "Historical observed peak directional loads: Bangkok 1200, Guangzhou 27400 passengers/hour/direction; Guangzhou has passing lanes at stations. Station occupancy above 40% flagged as a queuing risk.",
+      "limits": "Not current ridership, not theoretical capacity, not percentage congestion relief. Single-berth simulation cannot borrow Guangzhou throughput."
+    },
+    {
+      "url": "https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/08-traffic-impact-assessment/00-index.manu",
+      "supports": "Qualitative Guangzhou Gangding example of improved general traffic and bus capacity/speed; need assess traffic spillback and BRT impacts.",
+      "limits": "No quantitative causal congestion effect extracted."
+    },
+    {
+      "url": "https://github.com/ITDP/the-online-brt-planning-guide/blob/9d3057044d8201a84d7c35fa67789e4cbcf099a4/guide/08-traffic-impact-assessment/05-estimating-traffic-volumes.manu",
+      "supports": "Account for existing buses removed from mixed traffic, buses remaining, modal shift, diversions and turning traffic."
+    }
+  ],
+  "unverified_sources": [
+    {
+      "url": "https://www.wri.org/research/social-environmental-and-economic-impacts-bus-rapid-transit",
+      "status": "Network domain blocked during research; no numeric claim taken from unread original."
+    }
+  ],
+  "neihu_congestion_reduction_percent": null
+}
