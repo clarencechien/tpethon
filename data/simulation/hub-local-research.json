@@ -1,0 +1,123 @@
+{
+  "checked_on": "2026-10-17",
+  "sources": [
+    {
+      "id": "companies",
+      "title": "臺北市內湖科技園區廠商名錄",
+      "dataset_id": "15c3e1ae-899b-466c-a536-208497e3a369",
+      "page": "https://data.taipei/dataset/detail?id=15c3e1ae-899b-466c-a536-208497e3a369",
+      "url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=296acfa2-5d93-4706-ad58-e83cc951863c",
+      "resolved_url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=296acfa2-5d93-4706-ad58-e83cc951863c",
+      "bytes": 573904,
+      "expected_bytes": 573904,
+      "sha256": "200919f93e04350819f49da95c38354c369db444e84d2a7119b5452405b62aab",
+      "fetched_at": "2026-10-17T08:53:38.483978+00:00",
+      "metadata_sha256": "4fdfc8a1a647a1159a4ab0d66f1e06bb4e273eb2bc0fddb0734aa7dcfe4ee21e",
+      "metadata_year_roc": null,
+      "read_status": "已解析CSV欄位、列數與統編唯一性；未驗證公司在場或坐標系統"
+    },
+    {
+      "id": "mobility_management",
+      "title": "臺北市建立交通機動力服務中心可行性評估",
+      "dataset_id": "2835bbfa-ee24-4f2c-97ca-234846389db8",
+      "page": "https://data.taipei/dataset/detail?id=2835bbfa-ee24-4f2c-97ca-234846389db8",
+      "url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=e4ab1572-3ea7-4537-bb20-fa5ebeeb6778",
+      "resolved_url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=e4ab1572-3ea7-4537-bb20-fa5ebeeb6778",
+      "bytes": 4243620,
+      "expected_bytes": 4243620,
+      "sha256": "df32f9f24bd5684a931fcc84bf1af743eee33c6ab0925bbce85f62764955a869",
+      "fetched_at": "2026-10-17T08:53:45.831358+00:00",
+      "metadata_sha256": "800ce059281a41b6da1c91f77ec6a20c7868f6c8c3dbef0df8f6099489a3eee9",
+      "metadata_year_roc": "98",
+      "cover_date": "2009-12",
+      "pdf_pages_read": [
+        1,
+        16,
+        180,
+        184,
+        188,
+        189,
+        190,
+        191,
+        228,
+        238
+      ],
+      "read_status": "已讀問卷方法及停車優惠評估指定段落；未採預期效果係數"
+    },
+    {
+      "id": "survey_2018",
+      "title": "107 年第 1 次(5 月)臺北市交通民意調查報告",
+      "dataset_id": "e8600a47-0788-414e-af8e-c065444b07aa",
+      "page": "https://data.taipei/dataset/detail?id=e8600a47-0788-414e-af8e-c065444b07aa",
+      "url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=f87c63ac-d5ee-4897-b906-ba41a9021d89",
+      "resolved_url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=f87c63ac-d5ee-4897-b906-ba41a9021d89",
+      "bytes": 6902322,
+      "expected_bytes": 6902322,
+      "sha256": "66d5fd6e4a6eee93a6045e86a232db934094f85161f9738864f8569f2a51c254",
+      "fetched_at": "2026-10-17T08:53:46.106251+00:00",
+      "metadata_sha256": "e4fff47b0cdc8eca028ed0f03d66f30e26996da682a3cf6d2152e973733a87f2",
+      "metadata_year_roc": "107",
+      "cover_date": "2018-05",
+      "pdf_pages_read": [
+        1,
+        3,
+        4,
+        5,
+        6
+      ],
+      "read_status": "已讀摘要及調查範圍；非內湖專屬樣本，未採模式比例"
+    },
+    {
+      "id": "tech_corridor",
+      "title": "臺北市科技軸帶交通發展計畫 (第一期)",
+      "dataset_id": "25986a31-7e9f-45b2-8347-d047092295f5",
+      "page": "https://data.taipei/dataset/detail?id=25986a31-7e9f-45b2-8347-d047092295f5",
+      "url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=305558ae-2b0c-4580-823d-efbbbdbc7269",
+      "resolved_url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=305558ae-2b0c-4580-823d-efbbbdbc7269",
+      "bytes": 29443212,
+      "expected_bytes": 29443212,
+      "sha256": "9ceaef6aab9014c1bafbd88ac29b0ae4abe7dffc11da16921d31a088c6fe5cf1",
+      "fetched_at": "2026-10-17T08:54:57.516076+00:00",
+      "metadata_sha256": "93dc6df0aebdb48f5b1ba34e96b631f08eac9a8f9d959ea436e9e4b856be6d46",
+      "metadata_year_roc": "100",
+      "cover_date": "2012-08",
+      "pdf_pages_read": [
+        1,
+        164,
+        165,
+        166,
+        167,
+        168
+      ],
+      "read_status": "已讀指定頁並目視核對表2.47，非全本閱讀；2005調查僅取得二手引用"
+    }
+  ],
+  "historical_residence": {
+    "original_source_year": 2005,
+    "original_source_title": "內湖科技園區交通總體檢計畫報告",
+    "secondary_source": "tech_corridor",
+    "table": "2.47",
+    "printed_page": "2-105",
+    "pdf_page": 165,
+    "sample_size": null,
+    "used_as_current_weights": false,
+    "reported_percent": {
+      "臺北市": 55.66,
+      "新北市": 36.69,
+      "基隆地區": 4.43,
+      "桃園地區": 3.22
+    },
+    "district_sum_percent": {
+      "臺北市": 55.68,
+      "新北市": 36.46
+    },
+    "note": "已目視核對PDF表格；細項加總與小計不一致，未修補或正規化。未取得2005原始調查全文及樣本設計。"
+  },
+  "companies": {
+    "downloaded_rows": 5692,
+    "unique_business_ids": 5692,
+    "metadata_number_of_data": 5349,
+    "resource_last_modified": "2026-09-03 14:52:13",
+    "note": "原始CSV列數與詮釋資料不同；沒有員工數、在場率或通勤OD。未作人數權重。"
+  }
+}

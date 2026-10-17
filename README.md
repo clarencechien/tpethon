@@ -182,3 +182,5 @@ node --test tests/simulation_logic.test.mjs
 
 
 [E7：轉乘hub、停車／共乘補助與尖峰管制](https://clarencechien.github.io/tpethon/hubs.html)已完成六組合成情境與144組敏感度實驗。官方停車場總位作容量上限，通勤來源、行為及配額仍是假設；保留延後與未完成旅次。[方法與實地實驗設計](docs/HUB_EXPERIMENTS.md)。
+
+E7另有[實際捷運進站來源圖](https://clarencechien.github.io/tpethon/hubs.html#hub-metro-panel)：2026-09、120站、22個週一至週五日，可切日期；[在地研究查核](docs/research/LOCAL_COMMUTING_RESEARCH.md)附2005年內科員工來源二手引用、2009年停車轉乘優惠評估、2018年交通民調及廠商名錄限制。歷史比例與既有捷運客都未當成今日私車來源權重。重跑捷運彙整：`python scripts/prepare_hub_metro.py`。
