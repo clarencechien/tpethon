@@ -1,0 +1,5 @@
+#stagger-error{padding:24px;background:#fff0df}
+#stagger-content select{font:inherit;max-width:100%}
+#stagger-content .metric-label{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+#stagger-road-table{min-width:900px}
+#stagger-queue-chart svg{min-width:650px}

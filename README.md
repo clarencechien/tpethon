@@ -1,15 +1,15 @@
 # 內湖交通觀測站
 
-先讀 [整體報告：問題、方案、假設與預期效果](docs/REPORT.md)，或開啟 [總覽儀表板](https://clarencechien.github.io/tpethon/)。[現況地圖／晨晚峰回放](https://clarencechien.github.io/tpethon/map.html) 為獨立頁面。
+先讀 [實驗Q&A：目前能回答什麼](https://clarencechien.github.io/tpethon/experiments.html)，或開啟 [總覽儀表板](https://clarencechien.github.io/tpethon/)。[整體報告](docs/REPORT.md)保留早期整理與假設。[現況地圖／晨晚峰回放](https://clarencechien.github.io/tpethon/map.html) 為獨立頁面。
 
 今日回放依賴當時保存的即時快照；TDX 歷史僅支援過去日期。首頁會核對實際排程紀錄；設定 cron 不代表已擷取成功。半日更新同步發布兩週摘要與同期間逐日回放。
 
 
 公開網站：**https://clarencechien.github.io/tpethon/**
 
-[實驗導覽 E1–E13](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
+[實驗Q&A E1–E14](https://clarencechien.github.io/tpethon/experiments.html)：每題先列目前答案與不能下的結論，再連到來源、圖表與各輪細節；不必依實驗編號順讀。
 
-首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
+首頁提供問題摘要、Q&A入口與情境比較；獨立的 OpenStreetMap 交通地圖提供方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
 
 ```sh
 python scripts/build_pages.py --history
@@ -196,3 +196,5 @@ E7另有[實際捷運進站來源圖](https://clarencechien.github.io/tpethon/hu
 [E12：班表、費用與可靠度](https://clarencechien.github.io/tpethon/service-search.html)：不新增API請求，沿用E11資料與模型搜尋540次候選評估，再以未參與挑選的旅客與延誤驗證。不能把平均省時當無人受害，也不估實際減塞。[完整方法](docs/SERVICE_SEARCH.md)。離線重跑 `node scripts/run_service_search.mjs`；測試 `node --test tests/service_search_logic.test.mjs`。
 
 [E13：等候與收斂判斷](https://clarencechien.github.io/tpethon/holding.html)：固定E12四車候選，測有上限等候與車上／後續旅客代價；100組條件、400筆結果，新增絕對準時門檻，暫不推薦直接開行，先實測。[方法與停止條件](docs/HOLDING_DECISION.md)。離線重跑 `node scripts/run_holding.mjs`；測試 `node --test tests/holding_logic.test.mjs`。
+
+[E14：已經分時，再錯峰有用嗎？](https://clarencechien.github.io/tpethon/staggered.html)：保留既有分時型態，只計額外實際移動；分開晨間捷運人次算術與晚間假設排隊，不推算企業採行率或實際減塞。[方法](docs/STAGGERED_HOURS.md)。重跑 `node scripts/run_staggered.mjs`；測試 `node --test tests/staggered_logic.test.mjs`。入口已改為先回答問題、再連到細節的Q&A。
