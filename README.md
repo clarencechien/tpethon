@@ -7,7 +7,7 @@
 
 公開網站：**https://clarencechien.github.io/tpethon/**
 
-[實驗導覽 E1–E9](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
+[實驗導覽 E1–E10](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
 
 首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
 
@@ -188,3 +188,5 @@ E7另有[實際捷運進站來源圖](https://clarencechien.github.io/tpethon/hu
 [E8：捷運接駁、直達快線與停車轉BRT](https://clarencechien.github.io/tpethon/alternatives.html)：同一批原開車／公共運輸合成旅客、有限車隊、預約車位與預算，檢查原公共運輸者改開車的反效果。已跑72組參數、288筆政策結果；不是現況校正或最佳方案排名。[完整方法](docs/ALTERNATIVE_SERVICES.md)。重跑 `node scripts/run_alternatives.mjs`；模型測試 `node --test tests/alternatives_logic.test.mjs`。
 
 [E9：預約、配車與延誤測試](https://clarencechien.github.io/tpethon/repairs.html)：保留不適合轉乘者的原方式、預約實際班次座位、取消空班，逐人比較新增晚到及私車＋新增巴士里程。已跑72組條件、360筆政策結果；原假設無可接受的修正預約，條件改善也未通過延誤驗證。[完整方法](docs/SERVICE_REPAIRS.md)。重跑 `node scripts/run_repairs.mjs`；測試 `node --test tests/repair_logic.test.mjs`。
+
+[E10：單一走廊的專車、hub與BRT條件](https://clarencechien.github.io/tpethon/corridor-trial.html)：九段OSM道路路徑、同批合成旅客、背景車與既有公車，檢查專用道取得方式、有限車隊與估算成本。324組條件、1,296筆政策結果；未校正成實際減塞效果。[完整方法](docs/CORRIDOR_TRIAL.md)。重跑 `python scripts/prepare_corridor_trial.py`（需要原始站點快取與OSRM連線），或直接用版本控制輸入執行 `node scripts/run_corridor_trial.mjs`；測試 `node --test tests/corridor_trial_logic.test.mjs`。
