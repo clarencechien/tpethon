@@ -1,0 +1,12 @@
+#search-error{padding:24px;background:#fff0df}
+#search-content .metric-label{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#search-content .service-controls select{font:inherit;padding:12px;max-width:100%}
+#search-grid{min-width:480px;width:100%}
+#search-grid td{text-align:center;background:#edf5f0;font-weight:650}
+#search-grid td.harm{background:#fff0df;color:#763b19}
+#search-grid td.selected{outline:3px solid #216b57;outline-offset:-4px}
+#search-grid th{white-space:nowrap}
+#search-validation,#search-overview{min-width:850px}
+#search-download{font:inherit;padding:14px 20px;background:#216b57;color:white;border:0;border-radius:8px;cursor:pointer}
+#search-download:disabled{opacity:.5}
+#search-content article{min-width:0}

@@ -7,7 +7,7 @@
 
 公開網站：**https://clarencechien.github.io/tpethon/**
 
-[實驗導覽 E1–E11](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
+[實驗導覽 E1–E12](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
 
 首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
 
@@ -192,3 +192,5 @@ E7另有[實際捷運進站來源圖](https://clarencechien.github.io/tpethon/hu
 [E10：單一走廊的專車、hub與BRT條件](https://clarencechien.github.io/tpethon/corridor-trial.html)：九段OSM道路路徑、同批合成旅客、背景車與既有公車，檢查專用道取得方式、有限車隊與估算成本。324組條件、1,296筆政策結果；未校正成實際減塞效果。[完整方法](docs/CORRIDOR_TRIAL.md)。重跑 `python scripts/prepare_corridor_trial.py`（需要原始站點快取與OSRM連線），或直接用版本控制輸入執行 `node scripts/run_corridor_trial.mjs`；測試 `node --test tests/corridor_trial_logic.test.mjs`。
 
 [E11：松山鐵路hub與現況證據](https://clarencechien.github.io/tpethon/rail-hub.html)：九個週一至五日期的方向別VD、四條既有公車站序，分開比較既有公共運輸旅客服務與原開車者轉乘。216組條件、864筆政策結果；未確認鐵路新增名額時不計減車。[方法與來源](docs/RAIL_HUB_TRIAL.md)。以版本控制輸入重跑 `node scripts/run_rail_hub.mjs`，測試 `node --test tests/rail_hub_logic.test.mjs`。
+
+[E12：班表、費用與可靠度](https://clarencechien.github.io/tpethon/service-search.html)：不新增API請求，沿用E11資料與模型搜尋540次候選評估，再以未參與挑選的旅客與延誤驗證。不能把平均省時當無人受害，也不估實際減塞。[完整方法](docs/SERVICE_SEARCH.md)。離線重跑 `node scripts/run_service_search.mjs`；測試 `node --test tests/service_search_logic.test.mjs`。
