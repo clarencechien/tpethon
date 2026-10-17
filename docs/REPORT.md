@@ -105,6 +105,7 @@
 
 ## 詳細資料索引
 
+- [研究問題與資料對應查核](research/QUESTION_AUDIT.md)：哪些問題已由實測回答、哪些只是假設模型，以及修正後的尖峰特有路段清單。
 - [初始資料盤點與分析方法](research/NEIHU_RESEARCH.md)：保留 10/16 初始擷取的時間脈絡，非最新狀態頁。
 - [情境演算法與資料準備](SIMULATION_PLAN.md)
 - [BRT 研究、假設與公式](BRT_TRANSITION.md)
