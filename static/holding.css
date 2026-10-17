@@ -1,0 +1,7 @@
+#holding-error{padding:24px;background:#fff0df}
+#holding-content .metric-label{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+#holding-summary{min-width:650px}
+#holding-detail{min-width:1000px}
+#holding-content select{max-width:100%;font:inherit;padding:12px}
+.audit-stack{height:32px;display:flex;border-radius:6px;overflow:hidden;margin:24px 0}
+.audit-stack .earlier{background:#216b57}.audit-stack .later{background:#b45b31}.audit-stack .same{background:#ccd7d0}
