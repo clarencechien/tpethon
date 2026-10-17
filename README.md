@@ -7,7 +7,7 @@
 
 公開網站：**https://clarencechien.github.io/tpethon/**
 
-[實驗導覽 E1–E7](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
+[實驗導覽 E1–E8](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
 
 首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
 
@@ -184,3 +184,5 @@ node --test tests/simulation_logic.test.mjs
 [E7：轉乘hub、停車／共乘補助與尖峰管制](https://clarencechien.github.io/tpethon/hubs.html)已完成六組合成情境與144組敏感度實驗。官方停車場總位作容量上限，通勤來源、行為及配額仍是假設；保留延後與未完成旅次。[方法與實地實驗設計](docs/HUB_EXPERIMENTS.md)。
 
 E7另有[實際捷運進站來源圖](https://clarencechien.github.io/tpethon/hubs.html#hub-metro-panel)：2026-09、120站、22個週一至週五日，可切日期；[在地研究查核](docs/research/LOCAL_COMMUTING_RESEARCH.md)附2005年內科員工來源二手引用、2009年停車轉乘優惠評估、2018年交通民調及廠商名錄限制。歷史比例與既有捷運客都未當成今日私車來源權重。重跑捷運彙整：`python scripts/prepare_hub_metro.py`。
+
+[E8：捷運接駁、直達快線與停車轉BRT](https://clarencechien.github.io/tpethon/alternatives.html)：同一批原開車／公共運輸合成旅客、有限車隊、預約車位與預算，檢查原公共運輸者改開車的反效果。已跑72組參數、288筆政策結果；不是現況校正或最佳方案排名。[完整方法](docs/ALTERNATIVE_SERVICES.md)。重跑 `node scripts/run_alternatives.mjs`；模型測試 `node --test tests/alternatives_logic.test.mjs`。
