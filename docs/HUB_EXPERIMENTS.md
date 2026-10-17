@@ -58,7 +58,7 @@
 | [ETC門架OD／VD查核](PUBLIC_DATA_AND_EXPERIMENTS.md) | 已有樣本與欄位／修訂限制 | 未將相鄰門架加總成入區人數，未由車流猜測乘員 |
 | [戶政官方人口表](https://www.ris.gov.tw/info-popudata/app/awFastDownload/view?type=ods&m4c=m0s8&d5c=11509) | **已下載2026-09 ODS，50,139 bytes**；擷取北北基桃61區，區加總與市總數一致 | 可作戶籍居住地人口／戶數邊際，不是赴內湖通勤或私車OD；未直接當模型來源比例 |
 | [戶政ODRP019請求](https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/11509) | 開放網域後HTTP200，但本文為「查無資料」；另測11412亦同 | 端點、年月及正確資料集仍待核對；這條API嘗試未取得資料；後續已改由官方下載頁取得ODS，不把此空回應當統計 |
-| [109人口住宅普查舊站](https://census.dgbas.gov.tw/PHC2020/) | HTTP200但頁面寫「站臺已移除」，指向統計資訊網 | 舊入口不是有效普查表格；新站尚待查通勤地與居住地交叉表 |
+| [109人口住宅普查舊站](https://census.dgbas.gov.tw/PHC2020/) | HTTP200但頁面寫「站臺已移除」；10/17開放新站後重試，統計資訊網回傳503，上游憑證驗證失敗 | 尚未取得通勤地與居住地交叉表；不是證明資料不存在。[完整查核及所需表格](research/COMMUTING_DATA_STATUS.md) |
 | [交通統計入口](https://stat.motc.gov.tw/mocdb/stmain.jsp?sys=100) | 本環境仍403 | 運具比例、載客率、通勤時間仍待取得，不用猜測比例填入 |
 | [SUMO IntermodalRouting](https://sumo.dlr.de/docs/IntermodalRouting.html) | 已讀轉乘地點設定相關段落 | 可用parkingAreas、公共運輸停靠點等建立轉乘；不是證明場地現況可轉乘 |
 | [SUMO滿場改道](https://sumo.dlr.de/docs/Simulation/Rerouter.html#rerouting_to_an_alternative_parking_area) | 已讀停車容量不足等待／改道及資訊可見性段落 | 支持後續真實路網建模；本輪是自製模型，沒有執行SUMO |
