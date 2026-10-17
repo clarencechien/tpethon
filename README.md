@@ -7,7 +7,7 @@
 
 公開網站：**https://clarencechien.github.io/tpethon/**
 
-[實驗導覽 E1–E6](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
+[實驗導覽 E1–E7](https://clarencechien.github.io/tpethon/experiments.html)：找瓶頸 → 試接駁與錯峰 → 檢查車數 → 檢查場地 → [起終站與基地候選](https://clarencechien.github.io/tpethon/site-plan.html)。各頁附接續閱讀、假設與限制；BRT、封路及成長情境另列為延伸試算。
 
 首頁為 OpenStreetMap 瓶頸地圖：方向別 VD、速度／占有率圖層、走廊篩選、熱點排序與證據、公車實體站點、捷運歷史需求、來源時間及快照回放。紅點是待查熱點，不宣稱已證明瓶頸成因。
 
@@ -179,3 +179,6 @@ node --test tests/simulation_logic.test.mjs
 - [封路與單行示範](https://clarencechien.github.io/tpethon/network.html) → 假想路網的使用者均衡，不是內湖預測。
 - [資料、方法與引用](https://clarencechien.github.io/tpethon/methods.html) → 各頁數字的資料來源、公式、論文閱讀狀態與下一步。
 - [實際道路實驗計畫](docs/NETWORK_EXPERIMENTS.md) → 資料、現況驗證、封路／單行矩陣與評估指標。
+
+
+[E7：轉乘hub、停車／共乘補助與尖峰管制](https://clarencechien.github.io/tpethon/hubs.html)已完成六組合成情境與144組敏感度實驗。官方停車場總位作容量上限，通勤來源、行為及配額仍是假設；保留延後與未完成旅次。[方法與實地實驗設計](docs/HUB_EXPERIMENTS.md)。
